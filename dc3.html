@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0b2545">
+  <title>Verificación DC3 · KTMEX Safety Management System</title>
+  <link rel="stylesheet" href="assets/portal.css">
+</head>
+<body>
+  <header class="site-header"><div class="header-inner"><a class="logo" href="index.html">KTMEX</a><div class="brand-copy"><strong>Safety Management System</strong><span>Riesgos, autorizaciones, DC3 y capacitación</span></div><nav class="main-nav"><a data-nav href="index.html">Inicio</a><a data-nav href="jsa.html">JSA</a><a data-nav href="jra.html">JRA</a><a data-nav href="dc3.html">DC3</a><a data-nav href="contractors.html">Contratistas</a><a data-nav href="catalogs.html">Catálogos</a></nav><span class="pilot-badge">Piloto 2.0</span></div></header>
+  <main class="page-shell">
+    <div class="page-title"><div><div class="eyebrow">Contratistas · Verificación documental</div><h1>Expedientes DC3</h1><p>KTMEX registra y verifica constancias presentadas por contratistas. Este módulo no genera ni emite DC3.</p></div><div class="folio">SOLO VERIFICACIÓN</div></div>
+    <div class="notice danger" id="retentionNotice"><strong>Control previo:</strong> la carga de archivos está deshabilitada hasta aprobar la política de conservación, acceso y eliminación. El piloto permite validar los metadatos.</div>
+    <div class="app-layout">
+      <section>
+        <article class="card"><div class="card-header"><h2 class="step-title"><span class="step-number">1</span>Datos del contratista y constancia</h2><span class="chip gray">No emite DC3</span></div><form class="card-body grid grid-3" id="dc3Form">
+          <div class="field"><label class="required" for="personName">Nombre completo</label><input id="personName" maxlength="160" required></div>
+          <div class="field"><label class="required" for="companyName">Empresa contratista</label><input id="companyName" maxlength="160" required></div>
+          <div class="field"><label class="required" for="contractorKey">ID / gafete</label><input id="contractorKey" maxlength="80" required></div>
+          <div class="field"><label class="required" for="courseName">Curso o competencia</label><input id="courseName" maxlength="200" required></div>
+          <div class="field"><label class="required" for="trainingProvider">Agente capacitador / institución</label><input id="trainingProvider" maxlength="200" required></div>
+          <div class="field"><label class="required" for="dc3Folio">Folio de la constancia</label><input id="dc3Folio" maxlength="100" required></div>
+          <div class="field"><label class="required" for="issueDate">Fecha de emisión</label><input id="issueDate" type="date" required></div>
+          <div class="field"><label for="expiryDate">Vigencia / fecha límite</label><input id="expiryDate" type="date"><div class="help">Solo si el criterio interno o la competencia define vigencia.</div></div>
+          <div class="field"><label for="dc3File">Archivo PDF o imagen</label><input id="dc3File" type="file" accept="application/pdf,image/png,image/jpeg"><div class="help" id="fileHelp">Deshabilitado hasta aprobar conservación.</div></div>
+          <div class="field full"><label for="submitNotes">Observaciones del registro</label><textarea id="submitNotes" maxlength="800"></textarea></div>
+          <div class="full toolbar"><button class="btn btn-primary" type="submit">Registrar para verificación</button><button class="btn btn-light" type="reset">Limpiar</button></div>
+        </form></article>
+        <article class="card"><div class="card-header"><h2>Consulta de expedientes</h2><span class="chip gray" id="recordCount">0 registros</span></div><div class="card-body"><div class="filter-bar"><input id="recordSearch" placeholder="Buscar nombre, empresa, ID, curso o folio…"><select id="statusFilter"><option value="">Todos los estatus</option><option>PENDIENTE</option><option>VERIFICADO</option><option>RECHAZADO</option><option>VENCIDO</option></select></div><div id="recordTable"></div></div></article>
+      </section>
+      <aside class="sidebar"><article class="card" style="margin:0"><div class="card-header"><h3>Criterio de verificación</h3></div><div class="card-body"><ol><li>Identidad coincide con el contratista.</li><li>Curso/competencia corresponde al trabajo.</li><li>Datos del agente capacitador son legibles.</li><li>Fecha y vigencia cumplen el criterio aprobado.</li><li>No hay alteraciones visibles.</li><li>La decisión conserva revisor, fecha y motivo.</li></ol><p class="help">La autenticidad externa y vigencias específicas deberán documentarse por Safety.</p></div></article><article class="card" style="margin:0"><div class="card-header"><h3>Privacidad</h3></div><div class="card-body"><p>Los documentos contienen datos personales. No deben quedar en GitHub ni en el navegador. En producción se almacenarán en una carpeta privada de Google Drive y solo se mostrará un enlace autorizado.</p></div></article></aside>
+    </div>
+  </main>
+  <div id="toast" class="toast"></div><script src="assets/api-config.js"></script><script src="assets/common.js"></script><script src="assets/dc3.js"></script>
+</body></html>
+

@@ -1,0 +1,14 @@
+{
+  "name": "ktmex-safety-management-system",
+  "version": "0.3.0-pilot",
+  "private": true,
+  "description": "Piloto JSA, JRA, verificacion DC3 y capacitacion de contratistas",
+  "scripts": {
+    "test": "node --test tests/*.test.js",
+    "check": "npm test",
+    "export:catalog": "node tools/export-catalog.js data/catalog-draft.json"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

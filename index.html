@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#0b2545">
+  <title>KTMEX Safety Management System · Piloto</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%230b2545'/><path d='M18 15h8v15l12-15h10L35 31l14 18H39L26 32v17h-8z' fill='white'/></svg>">
+  <link rel="stylesheet" href="assets/portal.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="logo" href="index.html" aria-label="Inicio">KTMEX</a>
+      <div class="brand-copy"><strong>Safety Management System</strong><span>Riesgos, autorizaciones, DC3 y capacitación</span></div>
+      <nav class="main-nav" aria-label="Navegación principal">
+        <a data-nav href="index.html">Inicio</a>
+        <a data-nav href="jsa.html">JSA</a>
+        <a data-nav href="jra.html">JRA</a>
+        <a data-nav href="dc3.html">DC3</a>
+        <a data-nav href="contractors.html">Contratistas</a>
+        <a data-nav href="catalogs.html">Catálogos</a>
+      </nav>
+      <span class="pilot-badge">Piloto 2.0</span>
+    </div>
+  </header>
+
+  <main class="page-shell">
+    <section class="hero">
+      <div class="eyebrow">Sistema independiente · Gobierno de Safety y Ambiental</div>
+      <h1>Un solo criterio para evaluar, aprobar y ejecutar el trabajo.</h1>
+      <p>El usuario describe la actividad y confirma las condiciones reales. El sistema aplica el catálogo aprobado de peligros, riesgos, consecuencias, controles y documentos; las áreas responsables liberan el análisis y el formato conserva las firmas manuscritas.</p>
+      <div class="hero-actions">
+        <a class="btn btn-light" href="jra.html">Crear JRA rutinario</a>
+        <a class="btn btn-ghost" href="jsa.html">Crear JSA especial</a>
+        <a class="btn btn-ghost" href="contractors.html">Abrir capacitación</a>
+      </div>
+    </section>
+
+    <section class="status-strip" aria-label="Alcance del piloto">
+      <div class="status-stat"><span>Actividades base</span><strong>15</strong></div>
+      <div class="status-stat"><span>Riesgos y aspectos</span><strong>29</strong></div>
+      <div class="status-stat"><span>Preguntas de contexto</span><strong>17</strong></div>
+      <div class="status-stat"><span>Permisos integrados</span><strong>8</strong></div>
+    </section>
+
+    <section class="section">
+      <div class="section-heading">
+        <div><div class="eyebrow">Módulos</div><h2>Seleccione el flujo de trabajo</h2></div>
+        <p>JSA y JRA comparten la misma fuente de verdad, pero conservan su propósito, método de evaluación y formato de salida.</p>
+      </div>
+      <div class="module-grid">
+        <article class="module-card">
+          <div class="module-index">JSA</div>
+          <h3>Trabajo especial o no rutinario</h3>
+          <p>Construye la secuencia de tareas, aplica contexto por tarea, evita controles y documentos duplicados y prepara el F-SGA-8.1-7.</p>
+          <div class="meta">Salida: JSA con pasos, riesgos, controles, permisos y espacios para firmas manuscritas.</div>
+          <a class="btn btn-primary" href="jsa.html">Abrir JSA</a>
+        </article>
+        <article class="module-card jra">
+          <div class="module-index">JRA</div>
+          <h3>Trabajo rutinario de personal interno</h3>
+          <p>Parte del MOE, registra varios riesgos por tarea y calcula UC y CT con S × F × P × C, como lo define el formato controlado. Genera el KQMS-SA-FO-015 llenando el formato autorizado sin modificarlo.</p>
+          <div class="meta">Salida: el archivo KQMS-SA-FO-015 Rev. 00 llenado, con liberación MGR/AM, Engineering, Safety y Ambiental y firmas manuscritas.</div>
+          <a class="btn btn-success" href="jra.html">Abrir JRA</a>
+        </article>
+        <article class="module-card training">
+          <div class="module-index">LMS</div>
+          <h3>Capacitación de contratistas</h3>
+          <p>Ventana separada para cursos definidos por Safety, avance secuencial y examen cronometrado pregunta por pregunta.</p>
+          <div class="meta">Reglas piloto: 80% mínimo, máximo 3 intentos y registro local de resultados.</div>
+          <a class="btn btn-primary" href="contractors.html">Abrir contratistas</a>
+        </article>
+        <article class="module-card dc3">
+          <div class="module-index">DC3</div>
+          <h3>Verificación de constancias</h3>
+          <p>Registra, consulta y verifica los DC3 presentados por contratistas. KTMEX no emite constancias desde este sistema.</p>
+          <div class="meta">Salida: expediente con archivo, metadatos, estatus, revisor y trazabilidad.</div>
+          <a class="btn btn-primary" href="dc3.html">Abrir DC3</a>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-heading">
+        <div><div class="eyebrow">Flujo de control</div><h2>De la actividad a la ejecución</h2></div>
+      </div>
+      <div class="flow-grid">
+        <div class="flow-step" data-step="1"><strong>El área captura</strong><p>Actividad, tareas, MOE y condiciones reales del trabajo.</p></div>
+        <div class="flow-step" data-step="2"><strong>El sistema determina</strong><p>Peligros, eventos, consecuencias, controles y documentos aplicables.</p></div>
+        <div class="flow-step" data-step="3"><strong>Las áreas liberan</strong><p>Se aprueba el resultado generado; las excepciones regresan a revisión técnica.</p></div>
+        <div class="flow-step" data-step="4"><strong>Se imprime y firma</strong><p>Solo después de la liberación digital; las firmas del formato son manuscritas.</p></div>
+      </div>
+    </section>
+
+    <section class="section card">
+      <div class="card-header"><h2>Gobierno del sistema</h2><a class="btn btn-light btn-sm" href="catalogs.html">Ver catálogo</a></div>
+      <div class="card-body grid grid-3">
+        <div><div class="eyebrow">Safety</div><h3>Dueño funcional</h3><p>Administra criterios de seguridad, versiones, permisos, capacitación y liberación.</p></div>
+        <div><div class="eyebrow">Ambiental</div><h3>Coautor técnico</h3><p>Define aspectos, impactos, controles ambientales y criterios de residuos.</p></div>
+        <div><div class="eyebrow">Áreas operativas</div><h3>Aportan experiencia</h3><p>Proponen actividades, tareas y escenarios de campo; no alteran el catálogo aprobado.</p></div>
+      </div>
+    </section>
+  </main>
+
+  <div id="toast" class="toast"></div>
+  <script src="assets/api-config.js"></script>
+  <script src="assets/common.js"></script>
+  <script>
+    registerWebTool({
+      name: 'navigate_to_risk_module',
+      title: 'Abrir módulo de análisis',
+      description: 'Navega al módulo JSA, JRA o capacitación de contratistas.',
+      inputSchema: {type:'object', properties:{module:{type:'string', enum:['jsa','jra','contractors']}}, required:['module'], additionalProperties:false},
+      annotations: {readOnlyHint:true, untrustedContentHint:false},
+      execute({module}) { const target = {jsa:'jsa.html',jra:'jra.html',contractors:'contractors.html'}[module]; location.href = target; return {module,target}; }
+    });
+  </script>
+</body>
+</html>

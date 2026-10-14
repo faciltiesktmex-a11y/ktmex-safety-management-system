@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0b2545">
+  <title>Catálogos · KTMEX Safety Management System</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%230b2545'/><path d='M18 15h8v15l12-15h10L35 31l14 18H39L26 32v17h-8z' fill='white'/></svg>">
+  <link rel="stylesheet" href="assets/portal.css">
+</head>
+<body>
+  <header class="site-header"><div class="header-inner"><a class="logo" href="index.html">KTMEX</a><div class="brand-copy"><strong>Safety Management System</strong><span>Riesgos, autorizaciones, DC3 y capacitación</span></div><nav class="main-nav"><a data-nav href="index.html">Inicio</a><a data-nav href="jsa.html">JSA</a><a data-nav href="jra.html">JRA</a><a data-nav href="dc3.html">DC3</a><a data-nav href="contractors.html">Contratistas</a><a data-nav href="catalogs.html">Catálogos</a></nav><span class="pilot-badge">Piloto 2.0</span></div></header>
+  <main class="page-shell">
+    <div class="page-title"><div><div class="eyebrow">Fuente única de verdad</div><h1>Catálogo de riesgos y controles</h1><p>Vista de gobierno para Safety y Ambiental. Las áreas operativas aportan escenarios; únicamente los dueños técnicos publican cambios.</p></div><div class="folio" id="catalogVersion">—</div></div>
+    <div class="notice danger"><strong>No aprobado para producción:</strong> esta versión demuestra la estructura. Antes de eliminar la revisión técnica de cada documento, Safety y Ambiental deben validar cada relación actividad–tarea–peligro–riesgo–consecuencia–control y publicar una versión vigente.</div>
+
+    <section class="status-strip">
+      <div class="status-stat"><span>Dueño funcional</span><strong>Safety</strong></div><div class="status-stat"><span>Coautor</span><strong>Ambiental</strong></div><div class="status-stat"><span>Estado</span><strong>Piloto</strong></div><div class="status-stat"><span>Próxima acción</span><strong>Validar matriz</strong></div>
+    </section>
+
+    <section class="card section">
+      <div class="card-header"><h2>Criterio único de evaluación</h2><span class="chip gray" id="criteriaVersion">—</span></div>
+      <div class="card-body" id="criteriaTables"></div>
+    </section>
+
+    <section class="card section">
+      <div class="card-header"><h2>Riesgos, consecuencias y controles</h2><span class="chip gray" id="riskCount">0 registros</span></div>
+      <div class="card-body">
+        <div class="filter-bar"><input id="catalogSearch" placeholder="Buscar código, peligro, riesgo, consecuencia o control…"><select id="catalogType"><option value="">Todos</option><option value="SEGURIDAD">Seguridad</option><option value="AMBIENTAL">Ambiental</option></select></div>
+        <div style="overflow:auto;max-height:720px"><table class="catalog-table"><thead><tr><th>Código</th><th>Tipo</th><th>Peligro</th><th>Riesgo / evento peligroso</th><th>Consecuencia</th><th>S / P por defecto</th><th>Medidas preventivas y controles</th><th>Documentación</th></tr></thead><tbody id="riskRows"></tbody></table></div>
+      </div>
+    </section>
+
+    <section class="grid grid-2 section">
+      <article class="card"><div class="card-header"><h2>Reglas obligatorias de publicación</h2></div><div class="card-body"><ol><li>Cada registro tiene código estable y propietario.</li><li>Todo cambio conserva versión, motivo, aprobador y fecha de vigencia.</li><li>Los controles siguen jerarquía: eliminación, sustitución, ingeniería, administrativos y EPP.</li><li>Los documentos y EPP se consolidan sin repeticiones.</li><li>Una actividad nueva permanece como excepción hasta validación técnica.</li><li>Un cambio de catálogo no modifica JSA/JRA ya liberados; genera nueva versión.</li></ol></div></article>
+      <article class="card"><div class="card-header"><h2>Datos pendientes de definición</h2></div><div class="card-body"><ul><li>Aprobación del criterio único del JSA (escalas, umbrales, pisos, jerarquía de controles y bloqueo) en assets/criteria.js.</li><li>Validar la severidad de CADA riesgo: hoy se convierte con mapeos provisionales (JSA 1–4 → 1–5; JRA 1–4 → 2/3/20/40).</li><li>Revisión documental de F-SGA-8.1-7 por el cambio de método del JSA.</li><li>Unificar JRA y JSA solo es posible con una nueva revisión de KQMS-SA-FO-015.</li><li>Registrar la huella SHA-256 del maestro autorizado de KQMS-SA-FO-015 en assets/fo015-map.js.</li><li>Criterio final de clasificación y colores de residuos.</li><li>Responsables nominales y suplencias de liberación.</li><li>Vigencia de JRA, cursos y constancias.</li><li>Temario oficial, banco de preguntas y tiempo por reactivo.</li><li>Regla de reentrenamiento después de agotar intentos.</li></ul></div></article>
+    </section>
+  </main>
+  <div id="toast" class="toast"></div>
+  <script src="assets/api-config.js"></script><script src="assets/catalog.js"></script><script src="assets/criteria.js"></script><script src="assets/fo015-map.js"></script><script src="assets/common.js"></script><script src="assets/catalogs.js"></script>
+</body>
+</html>

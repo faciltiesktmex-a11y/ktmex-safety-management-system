@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#0b2545">
+  <title>Contratistas · KTMEX Safety Management System</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%238a4fb5'/><path d='M18 15h8v15l12-15h10L35 31l14 18H39L26 32v17h-8z' fill='white'/></svg>">
+  <link rel="stylesheet" href="assets/portal.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="logo" href="index.html" aria-label="Inicio">KTMEX</a>
+      <div class="brand-copy"><strong>Safety Management System</strong><span>Riesgos, autorizaciones, DC3 y capacitación</span></div>
+      <nav class="main-nav" aria-label="Navegación principal">
+        <a data-nav href="index.html">Inicio</a><a data-nav href="jsa.html">JSA</a><a data-nav href="jra.html">JRA</a><a data-nav href="dc3.html">DC3</a><a data-nav href="contractors.html">Contratistas</a><a data-nav href="catalogs.html">Catálogos</a>
+      </nav>
+      <span class="pilot-badge">Piloto 2.0</span>
+    </div>
+  </header>
+
+  <main class="page-shell">
+    <div class="page-title">
+      <div><div class="eyebrow">Ventana exclusiva para contratistas</div><h1>Capacitación y evaluación</h1><p>Safety publica el curso y el banco de preguntas. El contratista completa el contenido antes de habilitar el examen cronometrado.</p></div>
+      <div class="folio" id="courseState">CURSO DEMO</div>
+    </div>
+    <div class="notice"><strong>Contenido demostrativo:</strong> Safety debe sustituir y aprobar el temario, materiales, banco de preguntas, vigencia y reglas de acreditación antes del uso oficial.</div>
+
+    <section class="card">
+      <div class="card-header"><h2>Identificación del contratista</h2><span class="chip">Datos del participante</span></div>
+      <div class="card-body grid grid-3">
+        <div class="field"><label class="required" for="contractorName">Nombre completo</label><input id="contractorName" placeholder="Nombre del participante"></div>
+        <div class="field"><label class="required" for="contractorCompany">Compañía</label><input id="contractorCompany" placeholder="Empresa contratista"></div>
+        <div class="field"><label class="required" for="contractorId">Identificador</label><input id="contractorId" placeholder="ID, gafete o folio"></div>
+      </div>
+    </section>
+
+    <div class="course-layout">
+      <aside class="card" style="margin:0">
+        <div class="card-header"><h3>Curso asignado</h3></div>
+        <div class="card-body">
+          <div class="course-list" id="courseList"></div>
+          <div class="divider"></div>
+          <div class="eyebrow">Progreso</div>
+          <div class="progress" style="margin-top:8px"><i id="courseProgress" style="width:0%"></i></div>
+          <p class="help" id="progressLabel">0 de 0 temas completados</p>
+          <div class="divider"></div>
+          <div class="grid grid-2">
+            <div class="metric"><span>Aprobación</span><strong id="passScore">80%</strong></div>
+            <div class="metric"><span>Intentos</span><strong id="attemptMetric">0 / 3</strong></div>
+          </div>
+          <button class="btn btn-primary" id="startExam" type="button" style="width:100%;margin-top:12px" disabled>Iniciar examen</button>
+        </div>
+      </aside>
+
+      <section>
+        <article class="card">
+          <div class="card-header"><h2 id="contentTitle">Inducción de seguridad para contratistas</h2><span class="chip gray" id="contentTag">Safety</span></div>
+          <div class="card-body" id="contentPanel"></div>
+        </article>
+
+        <article class="card" id="resultCard">
+          <div class="card-header"><h2>Historial del participante</h2><span class="chip gray">Piloto local</span></div>
+          <div class="card-body" id="resultHistory"><div class="empty">Todavía no hay intentos registrados.</div></div>
+        </article>
+
+        <details class="card">
+          <summary class="card-header" style="cursor:pointer"><h3>Configuración de Safety · demo</h3><span class="chip">Administrador</span></summary>
+          <div class="card-body grid grid-3">
+            <div class="field"><label for="cfgSeconds">Segundos por pregunta</label><input id="cfgSeconds" type="number" min="10" max="180" value="30"></div>
+            <div class="field"><label for="cfgPass">Calificación mínima</label><input id="cfgPass" type="number" min="1" max="100" value="80"></div>
+            <div class="field"><label for="cfgAttempts">Máximo de intentos</label><input id="cfgAttempts" type="number" min="1" max="10" value="3"></div>
+            <div class="field full"><label for="cfgTitle">Título del curso</label><input id="cfgTitle" value="Inducción de seguridad para contratistas"></div>
+            <div class="full toolbar"><button class="btn btn-success" id="saveConfig" type="button">Guardar reglas del piloto</button><button class="btn btn-light" id="resetProgress" type="button">Reiniciar progreso demo</button></div>
+          </div>
+        </details>
+      </section>
+    </div>
+  </main>
+
+  <div id="toast" class="toast"></div>
+  <script src="assets/api-config.js"></script>
+  <script src="assets/common.js"></script>
+  <script src="assets/contractors.js"></script>
+</body>
+</html>

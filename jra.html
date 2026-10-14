@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#0b2545">
+  <title>JRA · KTMEX Safety Management System</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%23198754'/><path d='M18 15h8v15l12-15h10L35 31l14 18H39L26 32v17h-8z' fill='white'/></svg>">
+  <link rel="stylesheet" href="assets/portal.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="logo" href="index.html" aria-label="Inicio">KTMEX</a>
+      <div class="brand-copy"><strong>Safety Management System</strong><span>Riesgos, autorizaciones, DC3 y capacitación</span></div>
+      <nav class="main-nav" aria-label="Navegación principal">
+        <a data-nav href="index.html">Inicio</a>
+        <a data-nav href="jsa.html">JSA</a>
+        <a data-nav href="jra.html">JRA</a>
+        <a data-nav href="dc3.html">DC3</a>
+        <a data-nav href="contractors.html">Contratistas</a>
+        <a data-nav href="catalogs.html">Catálogos</a>
+      </nav>
+      <span class="pilot-badge">Piloto 2.0</span>
+    </div>
+  </header>
+
+  <main class="page-shell">
+    <div class="page-title">
+      <div>
+        <div class="eyebrow">Personal interno · Trabajo rutinario</div>
+        <h1>Job Risk Assessment (JRA)</h1>
+        <p>KQMS-SA-FO-015 Rev. 00 · El sistema captura y calcula; el documento oficial se genera llenando el formato autorizado, sin modificarlo.</p>
+      </div>
+      <div class="folio" id="folioLabel">SIN FOLIO</div>
+    </div>
+
+    <div class="notice"><strong>Método del formato vigente:</strong> UC = S × F × P y CT = S × F × P × C, con las listas de valores del propio formato. Las asignaciones sugeridas por el catálogo y la agrupación de riesgos por categoría deben ser validadas por Safety y Ambiental antes de la versión productiva.</div>
+    <div id="masterStatus" class="notice">Verificando el maestro del formato…</div>
+
+    <div class="app-layout">
+      <section>
+        <article class="card">
+          <div class="card-header"><h2 class="step-title"><span class="step-number">1</span>Datos generales y MOE</h2><span class="chip green">Uso interno</span></div>
+          <div class="card-body grid grid-3">
+            <div class="field"><label class="required" for="evalDate">Fecha</label><input id="evalDate" type="date" data-general></div>
+            <div class="field"><label class="required" for="evaluator">Evaluador (nombre)</label><input id="evaluator" placeholder="Nombre completo" data-general></div>
+            <div class="field"><label class="required" for="department">Departamento</label><input id="department" placeholder="Ej. Mantenimiento" data-general></div>
+            <div class="field"><label class="required" for="areaMachine">Líneas / Máquina</label><input id="areaMachine" placeholder="Línea y equipo" data-general></div>
+            <div class="field"><label class="required" for="processName">Proceso</label><input id="processName" placeholder="Proceso evaluado" data-general></div>
+            <div class="field"><label class="required" for="workCategory">Categoría de trabajo</label><select id="workCategory" data-general></select></div>
+            <div class="field"><label class="required" for="activityType">Tipo de actividad</label><select id="activityType" data-general><option value="routine" selected>Rutinaria</option><option value="nonRoutine">No rutinaria</option></select></div>
+            <div class="field full"><label class="required" for="activitySelect">Actividad rutinaria</label><select id="activitySelect"><option value="">Seleccione una actividad…</option></select><div class="help">La opción “Agregar actividad nueva” crea una propuesta para revisión de Safety.</div></div>
+            <div id="newActivityPanel" class="field full hidden"><label class="required" for="newActivityName">Nombre de la actividad nueva</label><input id="newActivityName" maxlength="180" placeholder="Describa la actividad rutinaria"><div class="toolbar" style="margin-top:8px"><button class="btn btn-success btn-sm" id="useNewActivity" type="button">Usar actividad</button><span class="help">Quedará marcada como excepción hasta aprobación.</span></div></div>
+            <div class="field"><label class="required" for="moeExists">¿Cuenta con MOE?</label><select id="moeExists" data-general><option value="">Seleccione…</option><option value="yes">Sí</option><option value="no">No</option></select></div>
+            <div class="field"><label for="moeCode">Código de MOE</label><input id="moeCode" placeholder="Ej. MOE-MTTO-001" data-general><div class="help">Se guarda en el sistema; el formato solo pide SI/NO.</div></div>
+            <div class="field"><label for="moeRevision">Revisión de MOE</label><input id="moeRevision" placeholder="Ej. Rev. 03" data-general></div>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-header"><h2 class="step-title"><span class="step-number">2</span>Tareas y evaluación de riesgos de seguridad</h2><button class="btn btn-light btn-sm" id="addTask" type="button">+ Agregar tarea</button></div>
+          <div class="card-body">
+            <div class="notice info"><strong>Cómo se llena el formato:</strong> un renglón por tarea y categoría de peligro (H). Si una tarea tiene varios riesgos de la misma categoría, el renglón toma el peor caso (S, F y P máximos y la C menos efectiva). F, P y C no se suponen: elíjalos para cada riesgo. Los aspectos ambientales no forman parte de este formato; se evalúan en el JSA.</div>
+            <div id="tasksContainer" class="empty">Seleccione una actividad para cargar la secuencia sugerida.</div>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-header"><h2 class="step-title"><span class="step-number">3</span>Higiene industrial y sustancias químicas</h2><span class="chip gray">Anexo KQMS-SA-FO-016</span></div>
+          <div class="card-body">
+            <div class="grid grid-3">
+              <div class="field"><label class="required" for="chemicalUse">¿Se utilizan sustancias químicas?</label><select id="chemicalUse" data-general><option value="">Seleccione…</option><option value="no">No</option><option value="yes">Sí</option></select><div class="help">“No” marca en el formato que no hay sustancias químicas y que no se llena el anexo.</div></div>
+            </div>
+            <div id="chemicalsBlock" class="hidden" style="margin-top:12px">
+              <div style="overflow:auto"><table class="catalog-table">
+                <thead><tr><th>No.</th><th>Sustancia química</th><th>Identificador</th><th>Frecuencia</th><th>Duración</th><th>Aire</th><th>Dérmico</th><th>Control ing.</th><th>EPP</th><th>Anote el EPP</th><th></th></tr></thead>
+                <tbody id="chemicalsRows"></tbody>
+              </table></div>
+              <div class="toolbar" style="margin-top:8px"><button class="btn btn-light btn-sm" id="addChemical" type="button">+ Agregar sustancia</button><span class="help" id="chemicalsHint"></span></div>
+              <details style="margin-top:8px"><summary class="help" style="cursor:pointer">Significado de los valores (del propio formato)</summary><div class="help" id="chemLegend"></div></details>
+            </div>
+            <div class="subhead" style="margin-top:16px">Otros riesgos potenciales (seleccione todos los que pudieran aplicar)</div>
+            <div id="otherHazards" class="context-grid"></div>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-header"><h2 class="step-title"><span class="step-number">4</span>Renglones que se escribirán en el formato</h2><span class="chip gray">Vista previa</span></div>
+          <div class="card-body" id="fo015Preview"></div>
+        </article>
+
+        <article class="card">
+          <div class="card-header"><h2 class="step-title"><span class="step-number">5</span>Confirmación y envío</h2></div>
+          <div class="card-body">
+            <label class="check-card"><input id="fieldCheck" type="checkbox"><span><strong>Confirmación de campo</strong><span>Revisé físicamente la tarea, las condiciones de operación, el MOE y la efectividad de los controles propuestos.</span></span></label>
+            <label class="check-card" style="margin-top:10px"><input id="adjustHeights" type="checkbox" checked><span><strong>Ajustar el alto de los renglones llenados</strong><span>Solo cambia la altura de las filas que se llenan, como al capturar a mano, para que el texto no se corte. Desactívelo si el formato debe conservar sus alturas originales; el texto largo se avisará pero podría verse cortado.</span></span></label>
+            <div class="toolbar" style="margin-top:14px">
+              <button class="btn btn-success" id="saveDraft" type="button">Guardar borrador</button>
+              <button class="btn btn-primary" id="submitApproval" type="button">Enviar a liberación</button>
+              <button class="btn btn-light" id="exportFo015" type="button" disabled>Generar formato FO-015 (Excel)</button>
+              <button class="btn btn-light" id="newJra" type="button">Nuevo</button>
+            </div>
+            <div id="masterFileRow" class="field hidden" style="margin-top:12px"><label for="masterFile">Maestro del formato oficial (.xls/.xlsx autorizado por Calidad)</label><input id="masterFile" type="file" accept=".xls,.xlsx"></div>
+          </div>
+        </article>
+      </section>
+
+      <aside class="sidebar">
+        <article class="card" style="margin:0">
+          <div class="card-header"><h3>Resumen en tiempo real</h3></div>
+          <div class="card-body summary-grid">
+            <div class="metric"><span>Tareas</span><strong id="metricTasks">0</strong></div>
+            <div class="metric"><span>Riesgos</span><strong id="metricRisks">0</strong></div>
+            <div class="metric"><span>Máx. sin controles</span><strong id="metricUc">—</strong></div>
+            <div class="metric"><span>Máx. con controles</span><strong id="metricCt">—</strong></div>
+            <div id="releaseStatus" class="release-box release-blocked">Complete la información requerida.</div>
+          </div>
+        </article>
+
+        <article class="card" style="margin:0">
+          <div class="card-header"><h3>Liberaciones digitales</h3><span class="chip gray" id="approvalCount">0 / 4</span></div>
+          <div class="card-body">
+            <div class="approval-list" id="approvalList"></div>
+            <p class="help">Cualquier cambio posterior revoca las liberaciones. El formato generado deja los cuadros de MGR/AM, ENG, Safety y Ambiental en blanco para la firma manuscrita.</p>
+          </div>
+        </article>
+
+        <article class="card" style="margin:0">
+          <div class="card-header"><h3>Escala vigente (formato)</h3></div>
+          <div class="card-body" style="font-size:11px;color:#475467">
+            <p><strong>S:</strong> 2 primeros auxilios · 3 registrable/tiempo perdido · 20 incapacidad permanente · 40 fatalidad.</p>
+            <p><strong>F:</strong> 1 poco frecuente · 4 semanal · 6 por turno · 8 más de 10 por turno.</p>
+            <p><strong>P:</strong> 0.5 improbable · 1 posible/probable.</p>
+            <p><strong>C:</strong> 1 sin control · 0.9 EPP · 0.5 estandarizado/efectivo · 0.1 ingeniería muy efectiva.</p>
+            <p>El formato marca en rojo UC o CT mayores a 20.</p>
+          </div>
+        </article>
+      </aside>
+    </div>
+  </main>
+
+  <div id="toast" class="toast"></div>
+  <script src="assets/api-config.js"></script>
+  <script src="assets/catalog.js"></script>
+  <script src="assets/xlsx-fill.js"></script>
+  <script src="assets/fo015-map.js"></script>
+  <script src="assets/common.js"></script>
+  <script src="assets/jra.js"></script>
+</body>
+</html>

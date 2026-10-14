@@ -1,0 +1,1565 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <base target="_top">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#213f70">
+  <title>JSA · KTMEX Safety Management System</title>
+  <style>
+    :root {
+      --blue: #315a96;
+      --blue-dark: #213f70;
+      --blue-soft: #edf3fb;
+      --green: #138a62;
+      --red: #b42318;
+      --orange: #d97706;
+      --yellow: #f4c430;
+      --ink: #172033;
+      --muted: #667085;
+      --line: #d7deea;
+      --surface: #ffffff;
+      --background: #f3f6fa;
+      --shadow: 0 10px 28px rgba(25, 47, 83, .10);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--background);
+      color: var(--ink);
+      font: 14px/1.45 Arial, Helvetica, sans-serif;
+    }
+    button, input, select, textarea { font: inherit; }
+    button { cursor: pointer; }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: linear-gradient(135deg, var(--blue-dark), var(--blue));
+      color: #fff;
+      box-shadow: 0 4px 16px rgba(19, 43, 78, .24);
+    }
+    .topbar-inner {
+      max-width: 1380px;
+      margin: auto;
+      min-height: 68px;
+      padding: 10px 22px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .brand {
+      width: 44px;
+      height: 44px;
+      border-radius: 11px;
+      display: grid;
+      place-items: center;
+      background: #fff;
+      color: var(--blue-dark);
+      font-weight: 800;
+      letter-spacing: -.5px;
+    }
+    .title-wrap { flex: 1; min-width: 0; }
+    .title-wrap h1 { margin: 0; font-size: 19px; line-height: 1.2; }
+    .title-wrap p { margin: 3px 0 0; opacity: .82; font-size: 12px; }
+    .folio-pill {
+      border: 1px solid rgba(255,255,255,.35);
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .portal-nav {
+      max-width: 1380px;
+      margin: auto;
+      padding: 0 22px 9px;
+      display: flex;
+      gap: 5px;
+      overflow-x: auto;
+    }
+    .portal-nav a {
+      padding: 6px 10px;
+      border-radius: 7px;
+      color: rgba(255,255,255,.82);
+      text-decoration: none;
+      font-size: 11px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .portal-nav a:hover, .portal-nav a.active { color: #fff; background: rgba(255,255,255,.14); }
+    .approval-panel { padding: 12px; border: 1px solid #b9d4f5; border-radius: 10px; background: #f3f8fe; }
+    .approval-panel .approval-grid { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: end; }
+    .approval-state { margin-top: 8px; color: #667085; font-size: 11px; }
+    .approval-state.ok { color: #0f6849; font-weight: 800; }
+
+    .notice {
+      max-width: 1380px;
+      margin: 16px auto 0;
+      padding: 12px 16px;
+      border: 1px solid #f0cf77;
+      border-radius: 10px;
+      background: #fff8dd;
+      color: #684d00;
+    }
+    .layout {
+      max-width: 1380px;
+      margin: 16px auto 34px;
+      padding: 0 18px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 320px;
+      gap: 18px;
+      align-items: start;
+    }
+    .main { min-width: 0; }
+    .sidebar { position: sticky; top: 86px; display: grid; gap: 14px; }
+
+    .card {
+      margin-bottom: 16px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .card-header {
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      border-bottom: 1px solid var(--line);
+      background: #fbfcfe;
+    }
+    .card-header h2, .card-header h3 { margin: 0; font-size: 16px; }
+    .card-body { padding: 18px; }
+    .step-number {
+      min-width: 30px;
+      height: 30px;
+      padding: 0 8px;
+      display: inline-grid;
+      place-items: center;
+      border-radius: 999px;
+      background: var(--blue);
+      color: #fff;
+      font-weight: 800;
+    }
+
+    .grid { display: grid; gap: 14px; }
+    .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .field label {
+      display: block;
+      margin-bottom: 5px;
+      color: #344054;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .field input, .field select, .field textarea {
+      width: 100%;
+      border: 1px solid #b9c5d7;
+      border-radius: 8px;
+      padding: 9px 10px;
+      background: #fff;
+      color: var(--ink);
+      outline: none;
+      transition: .15s border, .15s box-shadow;
+    }
+    .field textarea { min-height: 72px; resize: vertical; }
+    .field input:focus, .field select:focus, .field textarea:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(49,90,150,.14);
+    }
+    .help { color: var(--muted); font-size: 11px; margin-top: 5px; }
+
+    .context-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .check-card {
+      display: flex;
+      gap: 10px;
+      padding: 11px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fff;
+    }
+    .check-card:has(input:checked) { border-color: var(--blue); background: var(--blue-soft); }
+    .check-card input { margin-top: 2px; accent-color: var(--blue); }
+    .check-card strong { display: block; font-size: 12px; }
+    .check-card span { color: var(--muted); font-size: 11px; }
+
+    .permit-list { display: flex; flex-wrap: wrap; gap: 7px; }
+    .permit-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 9px;
+      border-radius: 999px;
+      background: #e9f3ff;
+      border: 1px solid #b9d4f5;
+      color: #174b83;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .permit-chip::before { content: '✓'; }
+
+    .step-card { border-left: 5px solid var(--blue); }
+    .step-card .card-header { background: #f7faff; }
+    .remove-btn {
+      border: 0;
+      border-radius: 7px;
+      padding: 7px 10px;
+      background: #fff0ef;
+      color: var(--red);
+      font-weight: 700;
+    }
+    .evaluation-grid {
+      margin-top: 14px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .evaluation {
+      padding: 13px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: #fbfcfe;
+    }
+    .evaluation.environment { border-top: 4px solid var(--green); }
+    .evaluation.safety { border-top: 4px solid var(--blue); }
+    .eval-title {
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-weight: 800;
+    }
+    .toggle-na { font-size: 11px; color: var(--muted); font-weight: 400; }
+    .toggle-na input { accent-color: var(--green); }
+    .risk-picker {
+      margin-bottom: 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+    }
+    .risk-picker summary { padding: 8px 10px; cursor: pointer; font-weight: 700; font-size: 12px; }
+    .risk-options {
+      max-height: 215px;
+      overflow: auto;
+      padding: 2px 10px 9px;
+      display: grid;
+      gap: 6px;
+    }
+    .risk-option { display: flex; gap: 8px; font-size: 11px; color: #344054; }
+    .risk-option input { accent-color: var(--blue); }
+
+    .rating-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .rating-grid .field label { font-size: 10px; }
+    .fixed-value {
+      min-height: 38px;
+      display: flex;
+      align-items: center;
+      padding: 8px 9px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #f2f4f7;
+      font-size: 12px;
+    }
+    .category {
+      min-height: 38px;
+      display: grid;
+      place-items: center;
+      padding: 7px;
+      border-radius: 8px;
+      color: #fff;
+      text-align: center;
+      font-weight: 800;
+      font-size: 11px;
+    }
+    .risk-A { background: #b42318; }
+    .risk-B { background: #d97706; }
+    .risk-C { background: #b48a00; }
+    .risk-D { background: #2e7d32; }
+    .risk-E { background: #3973a8; }
+    .lvl-1 { background: #2e7d32; }
+    .lvl-2 { background: #6c8d3d; }
+    .lvl-3 { background: #b48a00; }
+    .lvl-4 { background: #d97706; }
+    .lvl-5 { background: #b42318; }
+    .risk-NA { background: #667085; }
+
+    .btn-row { display: flex; flex-wrap: wrap; gap: 9px; }
+    .btn {
+      border: 0;
+      border-radius: 9px;
+      padding: 10px 14px;
+      font-weight: 800;
+      transition: .15s transform, .15s opacity;
+    }
+    .btn:hover { transform: translateY(-1px); }
+    .btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+    .btn-primary { background: var(--blue); color: #fff; }
+    .btn-success { background: var(--green); color: #fff; }
+    .btn-light { background: #edf1f6; color: #344054; }
+    .btn-danger { background: #fff0ef; color: var(--red); }
+
+    .metric {
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fff;
+    }
+    .metric span { display: block; color: var(--muted); font-size: 11px; }
+    .metric strong { display: block; margin-top: 4px; font-size: 17px; }
+    .summary-grid { display: grid; gap: 9px; }
+    .status-box { padding: 12px; border-radius: 10px; font-weight: 700; font-size: 12px; }
+    .status-ok { background: #eaf8f1; color: #126b4e; border: 1px solid #a7dec8; }
+    .status-block { background: #fff0ef; color: #8e2118; border: 1px solid #f4b5b0; }
+    .confirm {
+      display: flex;
+      gap: 9px;
+      padding: 11px;
+      border: 1px solid #efc05a;
+      border-radius: 9px;
+      background: #fff9e8;
+      font-size: 12px;
+    }
+    .confirm input { margin-top: 2px; accent-color: var(--blue); }
+    .empty {
+      padding: 28px;
+      text-align: center;
+      color: var(--muted);
+      border: 1px dashed #b9c5d7;
+      border-radius: 11px;
+      background: #fbfcfe;
+    }
+    .na-box { padding: 12px; border-radius: 8px; background: #f2f4f7; color: var(--muted); font-size: 12px; }
+    .activity-note { margin-top: 10px; padding: 9px; border-radius: 8px; background: #fff8dd; color: #684d00; font-size: 12px; }
+    .new-activity-panel {
+      margin-top: 10px;
+      padding: 12px;
+      border: 1px solid #9eb9dc;
+      border-radius: 10px;
+      background: var(--blue-soft);
+    }
+    .new-activity-panel[hidden] { display: none; }
+    .new-activity-actions { margin-top: 9px; display: flex; align-items: center; gap: 9px; flex-wrap: wrap; }
+    .task-context {
+      margin-top: 12px;
+      border: 1px solid #b9d0ec;
+      border-radius: 10px;
+      background: #f7faff;
+    }
+    .task-context summary { padding: 10px 12px; cursor: pointer; font-weight: 800; color: var(--blue-dark); }
+    .task-context-grid {
+      padding: 0 10px 10px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 7px;
+    }
+    .task-context .check-card { padding: 8px; }
+    .task-context .check-card strong { font-size: 11px; }
+    .task-context .check-card span { font-size: 10px; }
+    .risk-option-copy { display: grid; gap: 2px; }
+    .risk-option-copy small { color: var(--muted); }
+
+    .toast {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 100;
+      max-width: 420px;
+      padding: 12px 15px;
+      border-radius: 10px;
+      background: #101828;
+      color: #fff;
+      box-shadow: var(--shadow);
+      transform: translateY(120px);
+      opacity: 0;
+      transition: .25s;
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast.error { background: #8e2118; }
+    .loading { opacity: .65; pointer-events: none; }
+    #print-root { display: none; }
+
+    @media (max-width: 1050px) {
+      .layout { grid-template-columns: 1fr; }
+      .sidebar { position: static; grid-template-columns: repeat(2, minmax(0,1fr)); }
+    }
+    @media (max-width: 760px) {
+      .topbar-inner { padding: 9px 12px; }
+      .title-wrap h1 { font-size: 16px; }
+      .folio-pill { display: none; }
+      .layout { padding: 0 9px; }
+      .grid-2, .grid-3, .context-grid, .task-context-grid, .evaluation-grid, .sidebar { grid-template-columns: 1fr; }
+      .card-body { padding: 13px; }
+      .rating-grid { grid-template-columns: 1fr 1fr; }
+      .rating-grid .category { grid-column: 1 / -1; }
+    }
+
+    @media print {
+      @page { size: A4 landscape; margin: 6mm; }
+      body { background: #fff; color: #000; font-size: 8px; }
+      .topbar, .notice, .layout, .toast { display: none !important; }
+      #print-root { display: block !important; }
+      .print-page {
+        position: relative;
+        width: 100%;
+        min-height: 190mm;
+        page-break-after: always;
+      }
+      .print-page:last-child { page-break-after: auto; }
+      .print-title {
+        display: grid;
+        grid-template-columns: 1fr 5fr 1.5fr;
+        border: 1px solid #000;
+        align-items: stretch;
+      }
+      .print-logo { display: grid; place-items: center; font-weight: 900; font-size: 18px; }
+      .print-title h1 { margin: 0; padding: 8px; display: grid; place-items: center; border-left: 1px solid #000; border-right: 1px solid #000; font-size: 15px; }
+      .print-code { padding: 5px; display: grid; place-items: center; text-align: center; font-size: 8px; }
+      .print-meta { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid #000; border-top: 0; }
+      .print-meta div { min-height: 22px; padding: 4px; border-right: 1px solid #000; border-bottom: 1px solid #000; }
+      .print-meta div:nth-child(2n) { border-right: 0; }
+      .print-meta div:nth-last-child(-n+2) { border-bottom: 0; }
+      .print-band { padding: 5px; background: #315a96 !important; color: #fff !important; font-weight: 800; text-align: center; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .print-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+      .print-table th, .print-table td { border: 1px solid #000; padding: 3px; vertical-align: top; word-break: break-word; }
+      .print-table th { background: #315a96 !important; color: #fff !important; text-align: center; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .print-table .task { width: 15%; }
+      .print-table .type { width: 5%; text-align: center; }
+      .print-table .hazard { width: 19%; }
+      .print-table .rating { width: 4%; text-align: center; }
+      .print-table .controls { width: 24%; }
+      .print-table .docs { width: 13%; }
+      .print-risk { color: #fff !important; padding: 2px 3px; border-radius: 3px; font-weight: 800; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .print-signatures { margin-top: 6px; display: grid; grid-template-columns: repeat(3, 1fr); border: 1px solid #000; }
+      .signature { min-height: 48px; padding: 4px; text-align: center; border-right: 1px solid #000; border-bottom: 1px solid #000; }
+      .signature:nth-child(3n) { border-right: 0; }
+      .signature:nth-last-child(-n+3) { border-bottom: 0; }
+      .signature strong { display: block; }
+      .worker-table { width: 100%; margin-top: 6px; border-collapse: collapse; }
+      .worker-table th, .worker-table td { border: 1px solid #000; height: 22px; padding: 3px; }
+      .watermark { position: absolute; inset: 36% 8% auto; transform: rotate(-16deg); color: rgba(180,35,24,.16); font-size: 34px; font-weight: 900; text-align: center; z-index: 5; }
+      .print-footer { margin-top: 4px; text-align: right; font-size: 7px; }
+    }
+  </style>
+</head>
+<body>
+  <script src="assets/api-config.js"></script>
+  <script src="assets/catalog.js"></script>
+  <script src="assets/criteria.js"></script>
+  <script src="assets/common.js"></script>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">KTMEX</div>
+      <div class="title-wrap">
+        <h1>KTMEX Safety Management System · JSA</h1>
+        <p>F-SGA-8.1-7 · Catálogo uniforme · Aprobación digital simple · Firmas manuscritas</p>
+      </div>
+      <div class="folio-pill" id="folioTop">SIN FOLIO</div>
+    </div>
+    <nav class="portal-nav" aria-label="Módulos del sistema">
+      <a href="index.html">Inicio</a><a class="active" href="jsa.html">JSA</a><a href="jra.html">JRA</a><a href="dc3.html">DC3</a><a href="contractors.html">Contratistas</a><a href="catalogs.html">Catálogos</a>
+    </nav>
+  </header>
+
+  <div class="notice">
+    <strong>Piloto con catálogo gobernado:</strong> el usuario confirma las condiciones reales y el sistema aplica criterios uniformes. Antes de producción, Safety y Medio Ambiente deben aprobar y publicar la versión oficial del catálogo.
+  </div>
+
+  <div class="layout" id="app">
+    <main class="main">
+      <section class="card">
+        <div class="card-header"><h2><span class="step-number">1</span> Datos generales</h2></div>
+        <div class="card-body grid grid-2">
+          <div class="field">
+            <label for="compania">Compañía *</label>
+            <input id="compania" autocomplete="organization" placeholder="KTMEX o contratista">
+          </div>
+          <div class="field">
+            <label for="area">Área donde se realizará el trabajo *</label>
+            <input id="area" placeholder="Ej. Estampado, Welding, Facilities">
+          </div>
+          <div class="field" style="grid-column:1/-1">
+            <label for="descripcion">Descripción general del trabajo *</label>
+            <textarea id="descripcion" placeholder="Equipo, ubicación, alcance y resultado esperado"></textarea>
+          </div>
+          <div class="field">
+            <label for="fechaInicio">Fecha de inicio</label>
+            <input id="fechaInicio" type="date">
+          </div>
+          <div class="field">
+            <label for="fechaFin">Fecha de término</label>
+            <input id="fechaFin" type="date">
+          </div>
+          <div class="field">
+            <label for="horaInicio">Hora de inicio</label>
+            <input id="horaInicio" type="time">
+          </div>
+          <div class="field">
+            <label for="horaFin">Hora de término</label>
+            <input id="horaFin" type="time">
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-header"><h2><span class="step-number">2</span> Actividad y condiciones reales</h2></div>
+        <div class="card-body">
+          <div class="field">
+            <label for="actividad">Actividad principal *</label>
+            <select id="actividad" onchange="seleccionarActividad(this.value)">
+              <option value="">Seleccione...</option>
+            </select>
+            <div id="activityNote"></div>
+            <div id="nuevaActividadPanel" class="new-activity-panel" hidden>
+              <div class="field">
+                <label for="nuevaActividadNombre">Nombre de la nueva actividad *</label>
+                <input id="nuevaActividadNombre" maxlength="200" placeholder="Ej. Sustitución de bomba de proceso">
+              </div>
+              <div class="new-activity-actions">
+                <button class="btn btn-primary" type="button" onclick="confirmarNuevaActividad()">Usar actividad y agregar primera tarea</button>
+                <span class="help">Se podrá usar de inmediato y quedará registrada como propuesta pendiente de validación por Safety.</span>
+              </div>
+            </div>
+          </div>
+          <div class="activity-note"><strong>Cambio MVP 1.2:</strong> las preguntas de contexto se responden dentro de cada tarea para agregar únicamente los riesgos, controles y permisos que correspondan a ese paso.</div>
+          <h3 style="margin:18px 0 9px">Permisos activados</h3>
+          <div class="permit-list" id="permitList"><span class="help">Seleccione una actividad.</span></div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <h2><span class="step-number">3</span> Pasos, riesgos y contramedidas</h2>
+          <button class="btn btn-light" type="button" onclick="agregarPaso()">+ Agregar paso</button>
+        </div>
+        <div class="card-body">
+          <div id="stepsContainer" class="empty">Seleccione una actividad para desplegar los pasos sugeridos.</div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-header"><h2><span class="step-number">4</span> Confirmación y salida</h2></div>
+        <div class="card-body grid">
+          <label class="confirm">
+            <input id="confirmacion" type="checkbox" onchange="actualizarResumen()">
+            <span>Confirmo que revisé en campo los pasos, peligros, aspectos ambientales, controles y permisos aplicables.</span>
+          </label>
+          <div class="approval-panel">
+            <div class="approval-grid">
+              <div class="field"><label for="safetyApprover">Responsable de Safety</label><input id="safetyApprover" placeholder="Nombre de quien libera digitalmente"></div>
+              <button class="btn btn-success" type="button" onclick="aprobarSafety()">Aprobar JSA</button>
+            </div>
+            <div id="safetyApprovalStatus" class="approval-state">Pendiente. Primero guarde el JSA y confirme la revisión de campo.</div>
+          </div>
+          <div class="btn-row">
+            <button id="saveBtn" class="btn btn-success" type="button" onclick="guardar()">Guardar borrador</button>
+            <button id="printJsa" class="btn btn-primary" type="button" onclick="imprimir()" disabled>Vista e impresión JSA</button>
+            <button class="btn btn-light" type="button" onclick="reiniciarFormulario()">Nuevo</button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <aside class="sidebar">
+      <section class="card" style="margin:0">
+        <div class="card-header"><h3>Resumen</h3></div>
+        <div class="card-body summary-grid">
+          <div class="metric"><span>Pasos</span><strong id="metricSteps">0</strong></div>
+          <div class="metric"><span>Permisos</span><strong id="metricPermits">0</strong></div>
+          <div class="metric"><span>Riesgo inicial máximo</span><strong id="metricInitial">—</strong></div>
+          <div class="metric"><span>Riesgo residual máximo</span><strong id="metricResidual">—</strong></div>
+          <div id="releaseStatus" class="status-box status-block">Seleccione una actividad y revise el JSA.</div>
+        </div>
+      </section>
+
+      <section class="card" style="margin:0">
+        <div class="card-header"><h3>Reglas del MVP</h3></div>
+        <div class="card-body" style="font-size:12px;color:#475467">
+          <div id="reglasCriterio"></div>
+          <p>• La severidad residual se mantiene igual; los controles reducen principalmente la probabilidad.</p>
+          <p>• “N/A” requiere revisión y no recibe calificación artificial.</p>
+          <p>• No se asignan colores de residuos hasta que KTMEX los apruebe.</p>
+        </div>
+      </section>
+    </aside>
+  </div>
+
+  <div id="print-root"></div>
+  <div id="toast" class="toast"></div>
+
+  <script>
+    const CRITERIO = window.KTMEX_CRITERIA;
+    const CATALOGO = CRITERIO.adaptCatalog(window.KTMEX_CATALOG);
+    const RIESGOS = Object.fromEntries(CATALOGO.riesgos.map(r => [r.id, r]));
+    const ACTIVIDADES = Object.fromEntries(CATALOGO.actividades.map(a => [a.id, a]));
+    const PERMISOS = Object.fromEntries(CATALOGO.permisos.map(p => [p.id, p]));
+    const NUEVA_ACTIVIDAD = '__nueva_actividad__';
+    let estado = { actividad: null, pasos: [], permisos: [], folio: '', id: '', dirty: false, aprobacionSafety: null };
+
+    function renderReglasCriterio() {
+      const nodo = document.getElementById('reglasCriterio');
+      if (!nodo) return;
+      const reduccion = CRITERIO.controls.filter(c => c.maxReduction > 0).map(c => `${c.name} ${c.maxReduction}`).join(' · ');
+      const pisos = CRITERIO.severity.filter(x => x.floorInitial > 1 || x.floorResidual > 1).map(x =>
+        `${x.name} (S=${x.value}): inicial ≥ ${CRITERIO.levels[x.floorInitial - 1].name}${x.floorResidual > 1 ? `, residual ≥ ${CRITERIO.levels[x.floorResidual - 1].name}` : ''}`).join('; ');
+      nodo.innerHTML = `<p>• Riesgo residual ${esc(CRITERIO.blockingNames('JSA').join(' o '))} bloquea la liberación.</p>
+        <p>• Nivel = severidad × probabilidad (1–20), conforme a la tabla del formato vigente. Piso por severidad: ${esc(pisos)}.</p>
+        <p>• La probabilidad residual solo baja según el control de mayor jerarquía (puntos máx.): ${esc(reduccion)}.</p>
+        <p class="help">${esc(CRITERIO.version)} · ${esc(CRITERIO.status)}</p>`;
+    }
+
+    function iniciar() {
+      renderReglasCriterio();
+      const select = document.getElementById('actividad');
+      CATALOGO.actividades.forEach(a => {
+        const option = document.createElement('option');
+        option.value = a.id;
+        option.textContent = a.nombre;
+        select.appendChild(option);
+      });
+      const nueva = document.createElement('option');
+      nueva.value = NUEVA_ACTIVIDAD;
+      nueva.textContent = '+ Agregar actividad nueva';
+      select.appendChild(nueva);
+      const hoy = new Date().toISOString().slice(0, 10);
+      document.getElementById('fechaInicio').value = hoy;
+      document.getElementById('fechaFin').value = hoy;
+      document.querySelectorAll('input,textarea,select').forEach(el => {
+        if (!el.closest('.step-card')) el.addEventListener('input', () => {
+          estado.dirty = true;
+          if (el.id !== 'safetyApprover') invalidarAprobacionSafety();
+        });
+      });
+      document.addEventListener('input', event => {
+        if (event.target?.closest('.step-card')) invalidarAprobacionSafety();
+      });
+      actualizarResumen();
+    }
+
+    function seleccionarActividad(id) {
+      const panel = document.getElementById('nuevaActividadPanel');
+      if (id === NUEVA_ACTIVIDAD) {
+        panel.hidden = false;
+        estado.actividad = null;
+        estado.pasos = [];
+        estado.permisos = [];
+        estado.folio = '';
+        estado.id = '';
+        estado.dirty = true;
+        renderTodo();
+        document.getElementById('nuevaActividadNombre').focus();
+        return;
+      }
+      panel.hidden = true;
+      if (!id) {
+        estado.actividad = null;
+        estado.pasos = [];
+        estado.permisos = [];
+        renderTodo();
+        return;
+      }
+      const actividad = ACTIVIDADES[id];
+      estado.actividad = actividad;
+      estado.pasos = actividad.pasos.map(p => crearPaso(p));
+      estado.folio = '';
+      estado.id = '';
+      estado.dirty = true;
+      recalcularPermisos();
+      renderTodo();
+    }
+
+    function confirmarNuevaActividad() {
+      const input = document.getElementById('nuevaActividadNombre');
+      const nombre = input.value.trim();
+      if (nombre.length < 4) {
+        aviso('Capture un nombre de actividad de al menos 4 caracteres.', true);
+        input.focus();
+        return;
+      }
+      const slug = nombre.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '').slice(0, 45) || 'actividad';
+      const actividad = {
+        id: `custom_${slug}_${Date.now()}`,
+        nombre,
+        nota: 'Actividad nueva: se registrará como propuesta pendiente de validación por Safety.',
+        contexto: {},
+        permisosBase: [],
+        pasos: [{ tarea: '', riesgos: [], aspectos: [] }],
+        esNueva: true
+      };
+      ACTIVIDADES[actividad.id] = actividad;
+      const select = document.getElementById('actividad');
+      const option = document.createElement('option');
+      option.value = actividad.id;
+      option.textContent = `${actividad.nombre} (nueva)`;
+      select.insertBefore(option, select.querySelector(`option[value="${NUEVA_ACTIVIDAD}"]`));
+      select.value = actividad.id;
+      document.getElementById('nuevaActividadPanel').hidden = true;
+      estado.actividad = actividad;
+      estado.pasos = actividad.pasos.map(p => crearPaso(p));
+      estado.permisos = [];
+      estado.folio = '';
+      estado.id = '';
+      estado.dirty = true;
+      renderTodo();
+      aviso('Actividad creada para este JSA. Responda el contexto de la primera tarea.');
+    }
+
+    function crearPaso(base) {
+      return {
+        tarea: base.tarea || '',
+        contexto: Object.assign({}, base.contexto || {}),
+        seguridad: crearEvaluacion(base.riesgos || [], 'SEGURIDAD'),
+        ambiente: crearEvaluacion(base.aspectos || [], 'AMBIENTAL')
+      };
+    }
+
+    function crearEvaluacion(ids, tipo) {
+      const validos = unico(ids.filter(id => RIESGOS[id] && RIESGOS[id].tipo === tipo));
+      const datos = datosSugeridos(validos);
+      const evaluacion = {
+        aplica: validos.length > 0,
+        manualIds: validos.slice(),
+        contextIds: [],
+        ids: validos,
+        otros: '',
+        controles: datos.controles,
+        documentos: datos.documentos,
+        severidad: datos.severidad,
+        probabilidad: datos.probabilidad,
+        control: datos.control,
+        ajustes: {},
+        probabilidadResidual: null
+      };
+      evaluacion.probabilidadResidual = CRITERIO.defaultResidual(evaluacion.probabilidad, evaluacion.control);
+      return evaluacion;
+    }
+
+    function datosSugeridos(ids) {
+      const seleccionados = ids.map(id => RIESGOS[id]).filter(Boolean);
+      let principal = { severidad: 1, probabilidad: 1 };
+      seleccionados.forEach(r => {
+        if ((r.severidad * r.probabilidad) > (principal.severidad * principal.probabilidad)) principal = r;
+      });
+      const controles = consolidarControles(seleccionados.flatMap(r => r.controles || []));
+      return {
+        controles,
+        documentos: consolidarDocumentos(seleccionados.flatMap(r => r.documentos || [])),
+        severidad: principal.severidad || 1,
+        probabilidad: principal.probabilidad || 1,
+        control: CRITERIO.inferControl(controles)
+      };
+    }
+
+    function cambiarContextoPaso(indice, id, activo) {
+      const paso = estado.pasos[indice];
+      paso.contexto[id] = activo;
+      recalcularRiesgosPaso(indice);
+      recalcularPermisos();
+      estado.dirty = true;
+      renderTodo();
+      aviso(activo
+        ? 'Se agregaron a esta tarea los riesgos, controles y permisos relacionados.'
+        : 'Se retiraron de esta tarea las sugerencias exclusivas de esa respuesta.');
+    }
+
+    function idsContextoPaso(paso, campo) {
+      return unico(Object.keys(paso.contexto || {}).filter(id => paso.contexto[id]).flatMap(id => {
+        const regla = CATALOGO.reglasContexto[id];
+        return regla ? (regla[campo] || []) : [];
+      }).filter(id => RIESGOS[id]));
+    }
+
+    function recalcularRiesgosPaso(indice) {
+      const paso = estado.pasos[indice];
+      [['seguridad', 'riesgos'], ['ambiente', 'aspectos']].forEach(([tipo, campo]) => {
+        const evaluacion = paso[tipo];
+        evaluacion.contextIds = idsContextoPaso(paso, campo);
+        evaluacion.ids = unico((evaluacion.manualIds || []).concat(evaluacion.contextIds));
+        refrescarEvaluacion(evaluacion);
+      });
+    }
+
+    function limitesResidual(e) {
+      return { min: CRITERIO.minResidual(e.probabilidad, e.control), max: Number(e.probabilidad) };
+    }
+
+    function ajustarResidual(e) {
+      const { min, max } = limitesResidual(e);
+      let v = Number(e.probabilidadResidual);
+      if (!Number.isFinite(v)) v = CRITERIO.defaultResidual(e.probabilidad, e.control);
+      e.probabilidadResidual = Math.min(max, Math.max(min, v));
+    }
+
+    function refrescarEvaluacion(evaluacion) {
+      // Conserva lo que el usuario decidió a mano (antes se sobrescribía en cada cambio de contexto o riesgo).
+      const aj = evaluacion.ajustes || (evaluacion.ajustes = {});
+      const sugeridos = datosSugeridos(evaluacion.ids);
+      evaluacion.controles = sugeridos.controles;
+      evaluacion.documentos = sugeridos.documentos;
+      if (!aj.severidad) evaluacion.severidad = sugeridos.severidad;
+      if (!aj.probabilidad) evaluacion.probabilidad = sugeridos.probabilidad;
+      if (!aj.control) evaluacion.control = sugeridos.control;
+      if (!aj.probabilidadResidual) evaluacion.probabilidadResidual = CRITERIO.defaultResidual(evaluacion.probabilidad, evaluacion.control);
+      ajustarResidual(evaluacion);
+      evaluacion.aplica = evaluacion.ids.length > 0 || Boolean(evaluacion.otros.trim());
+    }
+
+    function recalcularPermisos() {
+      const ids = estado.actividad ? (estado.actividad.permisosBase || []).slice() : [];
+      estado.pasos.forEach(paso => {
+        Object.keys(paso.contexto || {}).forEach(id => {
+          if (paso.contexto[id] && CATALOGO.reglasContexto[id]) {
+            ids.push(...(CATALOGO.reglasContexto[id].permisos || []));
+          }
+        });
+      });
+      estado.permisos = unico(ids).sort();
+    }
+
+    function renderTodo() {
+      renderNotaActividad();
+      renderPermisos();
+      renderPasos();
+      actualizarResumen();
+      document.getElementById('folioTop').textContent = estado.folio || 'SIN FOLIO';
+    }
+
+    function renderNotaActividad() {
+      const node = document.getElementById('activityNote');
+      node.innerHTML = estado.actividad && estado.actividad.nota
+        ? `<div class="activity-note"><strong>Validación necesaria:</strong> ${esc(estado.actividad.nota)}</div>` : '';
+    }
+
+    function renderPermisos() {
+      const node = document.getElementById('permitList');
+      if (!estado.permisos.length) {
+        node.innerHTML = '<span class="help">No se activó un permiso específico; Safety debe confirmar.</span>';
+        return;
+      }
+      node.innerHTML = estado.permisos.map(id => {
+        const p = PERMISOS[id];
+        return `<span class="permit-chip" title="${esc(p.nombre)}">${esc(p.codigo)}</span>`;
+      }).join('');
+    }
+
+    function renderPasos() {
+      const node = document.getElementById('stepsContainer');
+      if (!estado.pasos.length) {
+        node.className = 'empty';
+        node.innerHTML = 'Seleccione una actividad para desplegar los pasos sugeridos.';
+        return;
+      }
+      node.className = '';
+      node.innerHTML = estado.pasos.map((paso, i) => `
+        <article class="card step-card" data-step="${i}">
+          <div class="card-header">
+            <h3><span class="step-number">${i + 1}</span> Tarea ${i + 1}</h3>
+            <button class="remove-btn" type="button" onclick="eliminarPaso(${i})">Eliminar</button>
+          </div>
+          <div class="card-body">
+            <div class="field">
+              <label>Descripción de la tarea *</label>
+              <textarea oninput="actualizarTarea(${i}, this.value)">${esc(paso.tarea)}</textarea>
+            </div>
+            ${renderContextoPaso(i, paso)}
+            <div class="evaluation-grid">
+              ${renderEvaluacion(i, 'seguridad', paso.seguridad)}
+              ${renderEvaluacion(i, 'ambiente', paso.ambiente)}
+            </div>
+          </div>
+        </article>`).join('');
+    }
+
+    function renderContextoPaso(indice, paso) {
+      const seleccionadas = Object.values(paso.contexto || {}).filter(Boolean).length;
+      return `<details class="task-context" ${seleccionadas ? 'open' : ''}>
+        <summary>Preguntas de contexto de la tarea ${indice + 1} · ${seleccionadas} seleccionada(s)</summary>
+        <div class="task-context-grid">
+          ${CATALOGO.preguntasContexto.map(p => `<label class="check-card">
+            <input type="checkbox" ${paso.contexto?.[p.id] ? 'checked' : ''}
+              onchange="cambiarContextoPaso(${indice}, '${p.id}', this.checked)">
+            <span><strong>${esc(p.etiqueta)}</strong><span>${esc(p.ayuda)}</span></span>
+          </label>`).join('')}
+        </div>
+      </details>`;
+    }
+
+    function renderEvaluacion(indice, tipo, evaluacion) {
+      const esSeguridad = tipo === 'seguridad';
+      const titulo = esSeguridad ? 'Seguridad' : 'Aspecto ambiental';
+      const tipoCatalogo = esSeguridad ? 'SEGURIDAD' : 'AMBIENTAL';
+      const riesgos = CATALOGO.riesgos.filter(r => r.tipo === tipoCatalogo);
+      if (!evaluacion.aplica) {
+        return `<section class="evaluation ${esSeguridad ? 'safety' : 'environment'}">
+          <div class="eval-title"><span>${titulo}</span>${toggleAplica(indice, tipo, false)}</div>
+          <div class="na-box">N/A — No se asigna severidad, probabilidad ni categoría. Debe validarse antes de liberar.</div>
+        </section>`;
+      }
+      const inicial = categoria(evaluacion.severidad, evaluacion.probabilidad);
+      const residual = categoria(evaluacion.severidad, evaluacion.probabilidadResidual, 'residual');
+      const limites = limitesResidual(evaluacion);
+      return `<section class="evaluation ${esSeguridad ? 'safety' : 'environment'}">
+        <div class="eval-title"><span>${titulo}</span>${toggleAplica(indice, tipo, true)}</div>
+        <details class="risk-picker">
+          <summary>${evaluacion.ids.length} elemento(s) seleccionado(s)</summary>
+          <div class="risk-options">
+            ${riesgos.map(r => `<label class="risk-option">
+              <input type="checkbox" ${evaluacion.ids.includes(r.id) ? 'checked' : ''}
+                ${(evaluacion.contextIds || []).includes(r.id) ? 'disabled title="Se controla desde las preguntas de contexto"' : ''}
+                onchange="cambiarRiesgo(${indice}, '${tipo}', '${r.id}', this.checked)">
+              <span class="risk-option-copy"><span><strong>${r.id}</strong> ${esc(r.riesgo || r.nombre)}</span>
+                <small>Peligro: ${esc(r.peligro || r.nombre)} · Consecuencia: ${esc(r.consecuencia)}</small></span>
+            </label>`).join('')}
+          </div>
+        </details>
+        <div class="field">
+          <label>Otro peligro/aspecto identificado</label>
+          <input value="${escAttr(evaluacion.otros)}" oninput="actualizarEval(${indice}, '${tipo}', 'otros', this.value)">
+        </div>
+        <div class="field" style="margin-top:8px">
+          <label>Medidas preventivas y controles operacionales *</label>
+          <textarea oninput="actualizarLista(${indice}, '${tipo}', 'controles', this.value)" onblur="normalizarLista(${indice}, '${tipo}', 'controles')">${esc(evaluacion.controles.join('\n'))}</textarea>
+          <div class="help">Ordenadas por jerarquía. El sistema une controles repetidos y consolida el EPP en una sola línea.</div>
+        </div>
+        <div class="field" style="margin-top:8px">
+          <label>Documentación requerida</label>
+          <textarea oninput="actualizarLista(${indice}, '${tipo}', 'documentos', this.value)" onblur="normalizarLista(${indice}, '${tipo}', 'documentos')">${esc(evaluacion.documentos.join('\n'))}</textarea>
+        </div>
+        <div class="rating-grid">
+          <div class="field"><label>Severidad inicial</label><select onchange="actualizarNumero(${indice}, '${tipo}', 'severidad', this.value)">${opciones(CATALOGO.severidades, evaluacion.severidad)}</select></div>
+          <div class="field"><label>Probabilidad inicial</label><select onchange="actualizarNumero(${indice}, '${tipo}', 'probabilidad', this.value)">${opciones(CATALOGO.probabilidades, evaluacion.probabilidad)}</select></div>
+          <div><label class="help">Nivel inicial</label><div class="category lvl-${inicial.index}">${inicial.nombre}<br>${inicial.valor}${inicial.floorApplied ? ' · piso por severidad' : ''}</div></div>
+          <div class="field"><label>Control de mayor jerarquía</label><select onchange="actualizarControl(${indice}, '${tipo}', this.value)">${CRITERIO.controls.map(c => `<option value="${c.id}" ${c.id === evaluacion.control ? 'selected' : ''}>${esc(c.name)} (baja P hasta ${c.maxReduction})</option>`).join('')}</select>
+            <div class="help">${evaluacion.ajustes && evaluacion.ajustes.control ? 'Elegido por el usuario.' : 'Sugerido por el catálogo: confirme en campo.'} Eliminación y sustitución solo si realmente se aplican.</div></div>
+          <div class="field"><label>Probabilidad residual (mínimo ${limites.min})</label><select onchange="actualizarNumero(${indice}, '${tipo}', 'probabilidadResidual', this.value)">${opciones(CATALOGO.probabilidades.filter(p => p.valor >= limites.min && p.valor <= limites.max), evaluacion.probabilidadResidual)}</select></div>
+          <div><label class="help">Nivel residual</label><div class="category lvl-${residual.index}">${residual.nombre}<br>${residual.valor}${residual.floorApplied ? ' · piso por severidad' : ''}</div></div>
+        </div>
+        <div class="help" style="margin-top:6px">La severidad residual no cambia: los controles solo bajan la probabilidad.${residual.bloquea ? ' <strong style="color:#b42318">El nivel residual ' + residual.nombre + ' bloquea la liberación del JSA.</strong>' : ''}</div>
+      </section>`;
+    }
+
+    function toggleAplica(indice, tipo, marcado) {
+      return `<label class="toggle-na"><input type="checkbox" ${marcado ? 'checked' : ''}
+        onchange="cambiarAplica(${indice}, '${tipo}', this.checked)"> Aplica</label>`;
+    }
+
+    function opciones(lista, seleccionado) {
+      return lista.map(o => `<option value="${o.valor}" ${Number(o.valor) === Number(seleccionado) ? 'selected' : ''}>${o.valor} — ${esc(o.etiqueta)}</option>`).join('');
+    }
+
+    function agregarPaso() {
+      estado.pasos.push(crearPaso({ tarea: '', riesgos: [], aspectos: [] }));
+      estado.dirty = true;
+      invalidarAprobacionSafety();
+      renderPasos();
+      actualizarResumen();
+    }
+
+    function eliminarPaso(indice) {
+      if (!confirm('¿Eliminar este paso de trabajo?')) return;
+      estado.pasos.splice(indice, 1);
+      estado.dirty = true;
+      invalidarAprobacionSafety();
+      renderPasos();
+      actualizarResumen();
+    }
+
+    function actualizarTarea(indice, valor) { estado.pasos[indice].tarea = valor; estado.dirty = true; }
+    function actualizarEval(indice, tipo, campo, valor) {
+      estado.pasos[indice][tipo][campo] = valor;
+      estado.pasos[indice][tipo].aplica = Boolean(valor.trim() || estado.pasos[indice][tipo].ids.length);
+      estado.dirty = true;
+      actualizarResumen();
+    }
+    function actualizarLista(indice, tipo, campo, valor) {
+      estado.pasos[indice][tipo][campo] = valor.split(/\r?\n/).map(v => v.trim()).filter(Boolean);
+      estado.dirty = true;
+    }
+    function normalizarLista(indice, tipo, campo) {
+      const e = estado.pasos[indice][tipo];
+      e[campo] = campo === 'controles' ? consolidarControles(e[campo]) : consolidarDocumentos(e[campo]);
+      estado.dirty = true;
+      renderPasos();
+      actualizarResumen();
+    }
+    function actualizarNumero(indice, tipo, campo, valor) {
+      const e = estado.pasos[indice][tipo];
+      const pedido = Number(valor);
+      e[campo] = pedido;
+      (e.ajustes || (e.ajustes = {}))[campo] = true;
+      if (campo === 'probabilidad' && !e.ajustes.probabilidadResidual) {
+        e.probabilidadResidual = CRITERIO.defaultResidual(e.probabilidad, e.control);
+      }
+      ajustarResidual(e);
+      if (campo === 'probabilidadResidual' && e.probabilidadResidual !== pedido) {
+        const { min } = limitesResidual(e);
+        aviso(pedido > e.probabilidad
+          ? 'La probabilidad residual no puede ser mayor que la inicial; se ajustó automáticamente.'
+          : `Con el control de mayor jerarquía «${CRITERIO.control(e.control).name}» la probabilidad solo puede bajar hasta ${min}. Para reducir más, elija un control de mayor jerarquía que realmente se aplique.`, true);
+      }
+      estado.dirty = true;
+      renderPasos();
+      actualizarResumen();
+    }
+
+    function actualizarControl(indice, tipo, valor) {
+      const e = estado.pasos[indice][tipo];
+      e.control = valor;
+      (e.ajustes || (e.ajustes = {})).control = true;
+      if (!e.ajustes.probabilidadResidual) e.probabilidadResidual = CRITERIO.defaultResidual(e.probabilidad, e.control);
+      ajustarResidual(e);
+      estado.dirty = true;
+      renderPasos();
+      actualizarResumen();
+    }
+    function cambiarAplica(indice, tipo, aplica) {
+      const e = estado.pasos[indice][tipo];
+      e.aplica = aplica;
+      estado.dirty = true;
+      renderPasos();
+      actualizarResumen();
+    }
+    function cambiarRiesgo(indice, tipo, id, activo) {
+      const e = estado.pasos[indice][tipo];
+      e.manualIds = activo ? unico((e.manualIds || []).concat(id)) : (e.manualIds || []).filter(v => v !== id);
+      recalcularRiesgosPaso(indice);
+      estado.dirty = true;
+      renderPasos();
+      actualizarResumen();
+    }
+
+    function categoria(severidad, probabilidad, tipo = 'inicial') {
+      const nivel = CRITERIO.levelOf(severidad, probabilidad, tipo === 'residual' ? 'residual' : 'initial');
+      return {
+        index: nivel.index, nombre: nivel.name, color: nivel.color, valor: nivel.score,
+        floorApplied: nivel.floorApplied, bloquea: CRITERIO.blocks(nivel, 'JSA'), letra: String(nivel.index)
+      };
+    }
+
+    function resumenRiesgos() {
+      let inicial = null;
+      let residual = null;
+      const clave = c => c.index * 100 + c.valor;
+      estado.pasos.forEach(p => ['seguridad', 'ambiente'].forEach(tipo => {
+        const e = p[tipo];
+        if (!e.aplica) return;
+        const ini = categoria(e.severidad, e.probabilidad);
+        const res = categoria(e.severidad, e.probabilidadResidual, 'residual');
+        if (!inicial || clave(ini) > clave(inicial)) inicial = ini;
+        if (!residual || clave(res) > clave(residual)) residual = res;
+      }));
+      return { inicial, residual };
+    }
+
+    function actualizarResumen() {
+      document.getElementById('metricSteps').textContent = estado.pasos.length;
+      document.getElementById('metricPermits').textContent = estado.permisos.length;
+      const resumen = resumenRiesgos();
+      document.getElementById('metricInitial').innerHTML = resumen.inicial ? resumen.inicial.nombre : '—';
+      document.getElementById('metricResidual').innerHTML = resumen.residual ? resumen.residual.nombre : '—';
+      const confirmado = document.getElementById('confirmacion')?.checked;
+      const status = document.getElementById('releaseStatus');
+      const incompleta = estado.pasos.some(paso => {
+        const evaluaciones = ['seguridad', 'ambiente'].map(tipo => paso[tipo]);
+        const sinIdentificacion = !evaluaciones.some(e => e.aplica && (e.ids.length || e.otros.trim()));
+        return sinIdentificacion || evaluaciones.some(e =>
+          e.aplica && ((!e.ids.length && !e.otros.trim()) || !e.controles.length));
+      });
+      if (!estado.actividad || !estado.pasos.length) {
+        status.className = 'status-box status-block';
+        status.textContent = 'Seleccione una actividad y revise el JSA.';
+      } else if (incompleta) {
+        status.className = 'status-box status-block';
+        status.textContent = 'BLOQUEADO: falta identificar un peligro/aspecto o capturar sus contramedidas.';
+      } else if (resumen.residual && resumen.residual.bloquea) {
+        status.className = 'status-box status-block';
+        status.textContent = `BLOQUEADO: existe riesgo residual ${CRITERIO.blockingNames('JSA').join(' o ')}. Aplique un control de mayor jerarquía o reduzca la probabilidad de forma justificada con Safety.`;
+      } else if (!confirmado) {
+        status.className = 'status-box status-block';
+        status.textContent = 'Pendiente de confirmación del usuario y validación de Safety/Medio Ambiente.';
+      } else if (!estado.aprobacionSafety) {
+        status.className = 'status-box status-ok';
+        status.textContent = 'Criterios completos. Guarde y solicite la aprobación digital de Safety.';
+      } else {
+        status.className = 'status-box status-ok';
+        status.textContent = 'APROBADO POR SAFETY · listo para imprimir y recabar firmas manuscritas.';
+      }
+      const printButton = document.getElementById('printJsa');
+      if (printButton) printButton.disabled = !estado.aprobacionSafety;
+      const approvalStatus = document.getElementById('safetyApprovalStatus');
+      if (approvalStatus) {
+        approvalStatus.className = 'approval-state' + (estado.aprobacionSafety ? ' ok' : '');
+        approvalStatus.textContent = estado.aprobacionSafety
+          ? `Aprobado por ${estado.aprobacionSafety.nombre} · ${new Date(estado.aprobacionSafety.fecha).toLocaleString('es-MX')}`
+          : 'Pendiente. Primero guarde el JSA y confirme la revisión de campo.';
+      }
+    }
+
+    function invalidarAprobacionSafety() {
+      if (!estado.aprobacionSafety) return;
+      estado.aprobacionSafety = null;
+      actualizarResumen();
+      aviso('El cambio revocó la aprobación de Safety; deberá aprobarse nuevamente.', true);
+    }
+
+    async function aprobarSafety() {
+      try {
+        const payload = construirPayload();
+        validarCliente(payload, true);
+        const residual = resumenRiesgos().residual;
+        if (residual?.bloquea) throw new Error(`No se puede aprobar mientras exista riesgo residual ${CRITERIO.blockingNames('JSA').join(' o ')}.`);
+        if (!estado.folio) throw new Error('Guarde el JSA antes de aprobarlo.');
+        const nombre = document.getElementById('safetyApprover').value.trim();
+        if (!nombre) throw new Error('Capture el nombre del responsable de Safety.');
+        if (window.KTMEX?.config?.apiUrl) {
+          const respuesta = await KTMEX.api.request('approveJsa', { id: estado.id, name: nombre });
+          estado.aprobacionSafety = {
+            nombre: respuesta?.nombre || respuesta?.name || nombre,
+            fecha: respuesta?.fecha || respuesta?.approvedAt || new Date().toISOString()
+          };
+        } else if (window.google?.script?.run) {
+          const respuesta = await gas('aprobarJsa', estado.id, nombre);
+          estado.aprobacionSafety = {
+            nombre: respuesta?.nombre || nombre,
+            fecha: respuesta?.fecha || new Date().toISOString()
+          };
+        } else {
+          estado.aprobacionSafety = { nombre, fecha: new Date().toISOString() };
+          localStorage.setItem('jsa_aprobacion_' + estado.id, JSON.stringify(estado.aprobacionSafety));
+        }
+        actualizarResumen();
+        aviso('JSA aprobado. La impresión quedó habilitada.');
+      } catch (error) {
+        aviso(error.message || String(error), true);
+      }
+    }
+
+    function construirPayload() {
+      const fechaInicio = document.getElementById('fechaInicio').value;
+      const fechaFin = document.getElementById('fechaFin').value;
+      const horaInicio = document.getElementById('horaInicio').value;
+      const horaFin = document.getElementById('horaFin').value;
+      return {
+        compania: document.getElementById('compania').value.trim(),
+        area: document.getElementById('area').value.trim(),
+        actividadId: estado.actividad?.id || '',
+        actividadNombre: estado.actividad?.nombre || '',
+        actividadNueva: Boolean(estado.actividad?.esNueva),
+        descripcion: document.getElementById('descripcion').value.trim(),
+        periodo: [fechaInicio, fechaFin].filter(Boolean).join(' a '),
+        horario: [horaInicio, horaFin].filter(Boolean).join(' a '),
+        contexto: contextoGlobal(),
+        permisos: estado.permisos.slice(),
+        criterio: CRITERIO.version,
+        confirmacion: document.getElementById('confirmacion').checked,
+        pasos: estado.pasos.map(p => ({
+          tarea: p.tarea.trim(),
+          contexto: Object.assign({}, p.contexto || {}),
+          seguridad: payloadEvaluacion(p.seguridad),
+          ambiente: payloadEvaluacion(p.ambiente)
+        }))
+      };
+    }
+
+    function payloadEvaluacion(e) {
+      const elementos = e.ids.map(id => {
+        const r = RIESGOS[id];
+        return r ? textoTripleta(r) : id;
+      });
+      if (e.otros.trim()) elementos.push(e.otros.trim());
+      const ini = categoria(e.severidad, e.probabilidad);
+      const res = categoria(e.severidad, e.probabilidadResidual, 'residual');
+      return {
+        aplica: e.aplica,
+        ids: e.ids.slice(),
+        otros: e.otros.trim(),
+        elementos,
+        controles: consolidarControles(e.controles),
+        documentos: consolidarDocumentos(e.documentos),
+        severidad: e.severidad,
+        probabilidad: e.probabilidad,
+        severidadResidual: e.severidad,
+        probabilidadResidual: e.probabilidadResidual,
+        control: e.control,
+        controlElegidoPorUsuario: Boolean(e.ajustes && e.ajustes.control),
+        nivelInicial: ini.nombre,
+        nivelResidual: res.nombre
+      };
+    }
+
+    function contextoGlobal() {
+      const resultado = {};
+      CATALOGO.preguntasContexto.forEach(p => {
+        resultado[p.id] = estado.pasos.some(paso => Boolean(paso.contexto?.[p.id]));
+      });
+      return resultado;
+    }
+
+    function validarCliente(payload, requerirConfirmacion) {
+      if (!payload.compania) throw new Error('Capture la compañía.');
+      if (!payload.area) throw new Error('Capture el área.');
+      if (!payload.actividadId) throw new Error('Seleccione una actividad.');
+      if (!payload.descripcion) throw new Error('Capture la descripción general.');
+      if (!payload.pasos.length) throw new Error('Agregue al menos un paso.');
+      payload.pasos.forEach((p, i) => {
+        if (!p.tarea) throw new Error(`El paso ${i + 1} no tiene descripción.`);
+        if ((!p.seguridad.aplica || !p.seguridad.elementos.length) && (!p.ambiente.aplica || !p.ambiente.elementos.length)) {
+          throw new Error(`El paso ${i + 1} no tiene riesgos ni aspectos.`);
+        }
+        [['seguridad', 'seguridad'], ['ambiente', 'ambiental']].forEach(([tipo, etiqueta]) => {
+          const e = p[tipo];
+          if (!e.aplica) return;
+          if (!e.elementos.length) throw new Error(`El paso ${i + 1} no tiene un peligro/aspecto de ${etiqueta}.`);
+          if (!e.controles.length) throw new Error(`El paso ${i + 1} no tiene contramedidas para la evaluación de ${etiqueta}.`);
+          if (e.probabilidadResidual > e.probabilidad) {
+            throw new Error(`La probabilidad residual del paso ${i + 1} no puede ser mayor que la inicial.`);
+          }
+          if (e.probabilidadResidual < CRITERIO.minResidual(e.probabilidad, e.control)) {
+            throw new Error(`La probabilidad residual del paso ${i + 1} es menor a la que permite el control de mayor jerarquía seleccionado (${CRITERIO.control(e.control).name}).`);
+          }
+        });
+      });
+      if (requerirConfirmacion && !payload.confirmacion) throw new Error('Marque la confirmación de revisión antes de guardar.');
+    }
+
+    async function guardar() {
+      try {
+        const payload = construirPayload();
+        validarCliente(payload, true);
+        setLoading(true);
+        let respuesta;
+        if (window.KTMEX?.config?.apiUrl) {
+          respuesta = await KTMEX.api.request('saveJsa', { id: estado.id, payload });
+        } else if (window.google?.script?.run) {
+          respuesta = await gas('guardarJsa', payload);
+        } else {
+          respuesta = guardarLocal(payload);
+        }
+        estado.folio = respuesta.folio;
+        estado.id = respuesta.id;
+        estado.dirty = false;
+        document.getElementById('folioTop').textContent = estado.folio;
+        aviso(respuesta.mensaje || 'JSA guardado.');
+        actualizarResumen();
+      } catch (error) {
+        aviso(error.message || String(error), true);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    function guardarLocal(payload) {
+      const folio = 'JSA-DEMO-' + new Date().toISOString().replace(/\D/g, '').slice(0, 14);
+      const id = window.crypto && typeof window.crypto.randomUUID === 'function'
+        ? window.crypto.randomUUID() : String(Date.now());
+      localStorage.setItem('jsa_' + id, JSON.stringify({ id, folio, payload, fecha: new Date().toISOString() }));
+      const res = resumenRiesgos().residual;
+      return {
+        id, folio, bloqueado: Boolean(res?.bloquea),
+        mensaje: res?.bloquea ? 'Guardado localmente como borrador bloqueado.' : 'Guardado localmente como borrador para validación.'
+      };
+    }
+
+    function gas(nombre, ...args) {
+      return new Promise((resolve, reject) => {
+        google.script.run.withSuccessHandler(resolve).withFailureHandler(err => reject(new Error(err.message || err)))
+          [nombre](...args);
+      });
+    }
+
+    async function imprimir() {
+      try {
+        if (!estado.aprobacionSafety) throw new Error('Safety debe aprobar el JSA antes de imprimir.');
+        const payload = construirPayload();
+        validarCliente(payload, false);
+        if (window.KTMEX?.config?.apiUrl) {
+          const archivo = await KTMEX.api.request('exportJsa', { id: estado.id }, { timeout: 60000 });
+          descargarBase64(archivo);
+          return;
+        }
+        renderImpresion(payload);
+        setTimeout(() => window.print(), 100);
+      } catch (error) {
+        aviso(error.message || String(error), true);
+      }
+    }
+
+    function descargarBase64(archivo) {
+      const bytes = Uint8Array.from(atob(archivo.base64), c => c.charCodeAt(0));
+      const url = URL.createObjectURL(new Blob([bytes], { type: archivo.mimeType || 'application/pdf' }));
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = archivo.filename || 'JSA.pdf';
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 30000);
+    }
+
+    function renderImpresion(payload) {
+      const pasosPorPagina = 5;
+      const paginas = [];
+      for (let i = 0; i < payload.pasos.length; i += pasosPorPagina) paginas.push(payload.pasos.slice(i, i + pasosPorPagina));
+      const resumen = resumenRiesgos();
+      const bloqueado = Boolean(resumen.residual?.bloquea || !payload.confirmacion || !estado.aprobacionSafety);
+      const documentosPorPaso = documentosSinRepetir(payload.pasos);
+      const permisosTexto = payload.permisos.map(id => PERMISOS[id] ? `${PERMISOS[id].codigo} — ${PERMISOS[id].nombre}` : id).join('; ') || 'Ninguno activado automáticamente; validar con Safety.';
+      document.getElementById('print-root').innerHTML = paginas.map((pasos, pagina) => `
+        <section class="print-page">
+          ${bloqueado ? '<div class="watermark">BORRADOR — NO AUTORIZADO</div>' : ''}
+          <div class="print-title">
+            <div class="print-logo">KTMEX</div>
+            <h1>Análisis de Riesgo para Trabajos Especiales (JSA)</h1>
+            <div class="print-code">F-SGA-8.1-7<br>Página ${pagina + 1} de ${paginas.length}</div>
+          </div>
+          <div class="print-meta">
+            <div><strong>Compañía:</strong> ${esc(payload.compania)}</div>
+            <div><strong>Periodo:</strong> ${esc(payload.periodo || '________________')}</div>
+            <div><strong>Actividad:</strong> ${esc(payload.actividadNombre)} — ${esc(payload.descripcion)}</div>
+            <div><strong>Horario:</strong> ${esc(payload.horario || '________________')}</div>
+          </div>
+          <div class="print-band">Análisis de riesgos y aspectos ambientales potenciales</div>
+          <table class="print-table">
+            <thead><tr>
+              <th class="task">Descripción de las tareas</th><th class="type">Tipo</th><th class="hazard">Peligro / riesgo (evento peligroso) / consecuencia</th>
+              <th class="rating">S</th><th class="rating">P</th><th class="rating">Nivel</th>
+              <th class="controls">Medidas preventivas y controles operacionales</th>
+              <th class="rating">S</th><th class="rating">P</th><th class="rating">Nivel</th><th class="docs">Documentación requerida</th>
+            </tr></thead>
+            <tbody>
+              ${pasos.map((paso, localIndex) => {
+                const indiceReal = pagina * pasosPorPagina + localIndex + 1;
+                return filaImpresion(indiceReal, paso.tarea, 'Seguridad', paso.seguridad, false, paso, documentosPorPaso[indiceReal - 1].seguridad) +
+                  filaImpresion(indiceReal, paso.tarea, 'Ambiental', paso.ambiente, true, paso, documentosPorPaso[indiceReal - 1].ambiente);
+              }).join('')}
+            </tbody>
+          </table>
+          <div style="border:1px solid #000;border-top:0;padding:4px"><strong>Permisos requeridos:</strong> ${esc(permisosTexto)}</div>
+          ${pagina === paginas.length - 1 ? firmasImpresion() : ''}
+          <div class="print-footer">Folio: ${esc(estado.folio || 'SIN FOLIO')} · Catálogo ${esc(CATALOGO.version)} · ${esc(CRITERIO.version)} · Firmas manuscritas</div>
+        </section>`).join('');
+    }
+
+    function filaImpresion(numero, tarea, tipo, e, esSegunda, paso, documentosImpresion) {
+      if (!e.aplica) {
+        return `<tr><td>${esSegunda ? '' : `<strong>${numero}.</strong> ${esc(tarea)}`}</td><td>${tipo}</td><td>N/A — validar</td>
+          <td colspan="3">N/A</td><td>Validar que no exista aspecto o riesgo aplicable.</td><td colspan="3">N/A</td><td>—</td></tr>`;
+      }
+      const ini = categoria(e.severidad, e.probabilidad);
+      const res = categoria(e.severidad, e.probabilidadResidual, 'residual');
+      const claveTipo = tipo === 'Seguridad' ? 'seguridad' : 'ambiente';
+      const elementos = entradasRiesgoPaso(paso)
+        .filter(item => item.tipo === claveTipo)
+        .map(item => `${numero}.${item.indice} ${item.id && RIESGOS[item.id] ? textoTripleta(RIESGOS[item.id]) : item.texto}`);
+      const controles = controlesTrazados(numero, paso, e, claveTipo);
+      return `<tr>
+        <td>${esSegunda ? '' : `<strong>${numero}.</strong> ${esc(tarea)}`}</td><td>${tipo}</td>
+        <td>${lineasHtml(elementos)}</td><td>${e.severidad}</td><td>${e.probabilidad}</td>
+        <td><span class="print-risk lvl-${ini.index}">${ini.nombre}</span></td>
+        <td>${lineasHtml(controles)}</td><td>${e.severidad}</td><td>${e.probabilidadResidual}</td>
+        <td><span class="print-risk lvl-${res.index}">${res.nombre}</span></td><td>${lineasHtml(documentosImpresion)}</td>
+      </tr>`;
+    }
+
+    function documentosSinRepetir(pasos) {
+      const vistos = new Set();
+      return pasos.map(paso => {
+        const salida = { seguridad: [], ambiente: [] };
+        ['seguridad', 'ambiente'].forEach(tipo => {
+          consolidarDocumentos(paso[tipo].documentos || []).forEach(documento => {
+            const clave = claveDocumento(documento);
+            if (vistos.has(clave)) return;
+            vistos.add(clave);
+            salida[tipo].push(documento);
+          });
+        });
+        return salida;
+      });
+    }
+
+    function entradasRiesgoPaso(paso) {
+      const resultado = [];
+      let indice = 0;
+      ['seguridad', 'ambiente'].forEach(tipo => {
+        const evaluacion = paso[tipo];
+        if (!evaluacion?.aplica) return;
+        unico(evaluacion.ids || []).forEach(id => {
+          resultado.push({ tipo, id, texto: '', indice: ++indice });
+        });
+        if (evaluacion.otros?.trim()) {
+          resultado.push({ tipo, id: '', texto: evaluacion.otros.trim(), indice: ++indice });
+        }
+      });
+      return resultado;
+    }
+
+    function controlesTrazados(numero, paso, evaluacion, tipo) {
+      const controles = consolidarControles(evaluacion.controles || []);
+      const entradas = entradasRiesgoPaso(paso);
+      const indicePorId = Object.fromEntries(entradas.filter(item => item.id).map(item => [item.id, item.indice]));
+      const entradasTipo = entradas.filter(item => item.tipo === tipo);
+      const siguiente = {};
+      (evaluacion.ids || []).forEach(id => {
+        siguiente[id] = ((RIESGOS[id]?.controles || []).length || 0) + 1;
+      });
+      let siguienteOtro = 1;
+      return controles.map(texto => {
+        if (/^\s*\d+\.\d+\.\d+/.test(texto)) return texto;
+        const clave = claveControl(texto);
+        const codigos = [];
+        (evaluacion.ids || []).forEach(id => {
+          (RIESGOS[id]?.controles || []).forEach((control, controlIndex) => {
+            if (claveControl(control) === clave && indicePorId[id]) {
+              codigos.push(`${numero}.${indicePorId[id]}.${controlIndex + 1}`);
+            }
+          });
+        });
+        if (!codigos.length && evaluacion.ids?.length) {
+          evaluacion.ids.forEach(id => {
+            if (indicePorId[id]) codigos.push(`${numero}.${indicePorId[id]}.${siguiente[id]++}`);
+          });
+        }
+        if (!codigos.length) {
+          const indiceOtro = entradasTipo[0]?.indice || 1;
+          codigos.push(`${numero}.${indiceOtro}.${siguienteOtro++}`);
+        }
+        return `${unico(codigos).join(' ')} ${texto}`;
+      });
+    }
+
+    function firmasImpresion() {
+      const roles = [
+        '1. Responsable de proyectos — Validación JSA KTMEX',
+        '2. Gerente o asistente del área responsable',
+        '3. Gerente del área de Producción, cuando aplique',
+        '4. Autorización de Medio Ambiente KTMEX',
+        '5. Responsable de Safety — Validación JSA KTMEX',
+        '6. Responsable de la compañía contratista'
+      ];
+      return `
+        <div class="print-band">Personal que realizará las actividades — nombres y firmas manuscritas</div>
+        <table class="worker-table"><thead><tr><th>Nombre del trabajador</th><th>Firma</th><th>Nombre del trabajador</th><th>Firma</th></tr></thead>
+          <tbody>${Array.from({length:4}, () => '<tr><td></td><td></td><td></td><td></td></tr>').join('')}</tbody></table>
+        <div class="print-signatures">${roles.map(r => `<div class="signature"><strong>${esc(r)}</strong><br><br>Nombre y firma: __________________________</div>`).join('')}</div>
+        <div class="print-band">Validación de inicio y auditorías de verificación</div>
+        <div class="print-signatures">
+          <div class="signature"><strong>7. Safety — validación de inicio</strong><br><br>__________________________</div>
+          <div class="signature"><strong>1ª verificación</strong><br><br>__________________________</div>
+          <div class="signature"><strong>2ª verificación</strong><br><br>__________________________</div>
+          <div class="signature"><strong>3ª verificación</strong><br><br>__________________________</div>
+          <div class="signature"><strong>4ª verificación</strong><br><br>__________________________</div>
+          <div class="signature"><strong>Cierre / observaciones</strong><br><br>__________________________</div>
+        </div>`;
+    }
+
+    function reiniciarFormulario() {
+      if (estado.dirty && !confirm('Se perderán los cambios no guardados. ¿Continuar?')) return;
+      document.getElementById('actividad').value = '';
+      document.getElementById('compania').value = '';
+      document.getElementById('area').value = '';
+      document.getElementById('descripcion').value = '';
+      document.getElementById('horaInicio').value = '';
+      document.getElementById('horaFin').value = '';
+      document.getElementById('confirmacion').checked = false;
+      document.getElementById('safetyApprover').value = '';
+      document.getElementById('nuevaActividadNombre').value = '';
+      document.getElementById('nuevaActividadPanel').hidden = true;
+      estado = { actividad: null, pasos: [], permisos: [], folio: '', id: '', dirty: false, aprobacionSafety: null };
+      renderTodo();
+    }
+
+    function setLoading(activo) {
+      document.getElementById('app').classList.toggle('loading', activo);
+      document.getElementById('saveBtn').disabled = activo;
+    }
+    function aviso(texto, error = false) {
+      const node = document.getElementById('toast');
+      node.textContent = texto;
+      node.className = 'toast show' + (error ? ' error' : '');
+      clearTimeout(aviso.timer);
+      aviso.timer = setTimeout(() => node.classList.remove('show'), 4200);
+    }
+    function unico(lista) { return [...new Set(lista.filter(Boolean))]; }
+    function normalizarClave(valor) {
+      return String(valor || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+    }
+    function claveControl(valor) {
+      const clave = normalizarClave(valor);
+      return /^(epp|equipo de proteccion personal)\b/.test(clave) || clave.includes('equipo de seguridad completo')
+        ? '__EPP__' : clave;
+    }
+    function consolidarControles(lista) {
+      const resultado = [];
+      const vistos = new Set();
+      const requisitosEpp = [];
+      let posicionEpp = -1;
+      (lista || []).map(v => String(v || '').trim()).filter(Boolean).forEach(texto => {
+        const clave = claveControl(texto);
+        if (clave === '__EPP__') {
+          if (posicionEpp < 0) {
+            posicionEpp = resultado.length;
+            resultado.push('');
+          }
+          const detalle = texto.replace(/^\s*(EPP|Equipo de protección personal)\s*:\s*/i, '').trim().replace(/[.;\s]+$/, '');
+          const claveDetalle = normalizarClave(detalle);
+          if (detalle && !vistos.has('epp:' + claveDetalle)) {
+            vistos.add('epp:' + claveDetalle);
+            requisitosEpp.push(detalle);
+          }
+          return;
+        }
+        if (vistos.has(clave)) return;
+        vistos.add(clave);
+        resultado.push(texto);
+      });
+      if (posicionEpp >= 0) {
+        resultado[posicionEpp] = 'EPP: ' + (requisitosEpp.length
+          ? requisitosEpp.join('; ') + '.'
+          : 'utilizar el equipo de protección personal definido para los riesgos de la tarea.');
+      }
+      return resultado.filter(Boolean);
+    }
+    function claveDocumento(valor) {
+      const texto = String(valor || '').toUpperCase();
+      const codigo = texto.match(/KQMS[-\s]*SA[-\s]*FO[-\s]*(\d{3})/);
+      return codigo ? `KQMS-SA-FO-${codigo[1]}` : normalizarClave(valor);
+    }
+    function consolidarDocumentos(lista) {
+      const resultado = [];
+      const vistos = new Set();
+      (lista || []).map(v => String(v || '').trim()).filter(Boolean).forEach(texto => {
+        const clave = claveDocumento(texto);
+        if (!clave || vistos.has(clave)) return;
+        vistos.add(clave);
+        resultado.push(/^KQMS-SA-FO-\d{3}$/.test(clave) ? clave : texto);
+      });
+      return resultado;
+    }
+    function textoTripleta(riesgo) {
+      return `PELIGRO: ${riesgo.peligro || riesgo.nombre} | RIESGO (EVENTO PELIGROSO): ${riesgo.riesgo || riesgo.nombre} | CONSECUENCIA: ${riesgo.consecuencia}`;
+    }
+    function lineasHtml(lista) { return lista && lista.length ? lista.map(esc).join('<br>') : '—'; }
+    function esc(valor) { return String(valor ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+    function escAttr(valor) { return esc(valor).replace(/\n/g, '&#10;'); }
+
+    iniciar();
+  </script>
+</body>
+</html>
