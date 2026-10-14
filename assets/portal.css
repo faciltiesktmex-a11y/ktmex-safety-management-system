@@ -33,6 +33,11 @@ button { cursor: pointer; }
 .main-nav a { padding: 8px 10px; border-radius: 7px; color: rgba(255,255,255,.76); text-decoration: none; font-size: 12px; font-weight: 700; white-space: nowrap; }
 .main-nav a:hover, .main-nav a.active { color: #fff; background: rgba(255,255,255,.13); }
 .pilot-badge, .folio, .chip { border: 1px solid rgba(255,255,255,.28); border-radius: 999px; padding: 7px 10px; font-size: 11px; font-weight: 800; white-space: nowrap; }
+.session-controls { display: flex; align-items: center; gap: 7px; }
+.header-auth-button { min-height: 32px; padding: 6px 10px; color: #fff; border: 1px solid rgba(255,255,255,.38); border-radius: 8px; background: rgba(255,255,255,.1); font-size: 11px; font-weight: 800; white-space: nowrap; }
+.header-auth-button:hover { background: rgba(255,255,255,.2); }
+.session-user { max-width: 155px; display: grid; padding: 4px 8px; color: #fff; border-radius: 8px; background: rgba(255,255,255,.09); font-size: 10px; font-weight: 800; line-height: 1.15; }
+.session-user small { overflow: hidden; margin-top: 2px; color: rgba(255,255,255,.68); font-size: 9px; text-overflow: ellipsis; white-space: nowrap; }
 
 .page-shell { max-width: 1380px; margin: auto; padding: 22px 20px 46px; }
 .page-title { margin-bottom: 18px; display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; }
@@ -126,6 +131,15 @@ button { cursor: pointer; }
 .catalog-table th { position: sticky; top: 0; z-index: 2; color: #fff; background: var(--navy); }
 .catalog-table tbody tr:nth-child(even) { background: #f8fafc; }
 .filter-bar { margin-bottom: 11px; display: grid; grid-template-columns: 1fr 210px; gap: 9px; }
+.matrix-preview { margin-top: 16px; padding-top: 15px; border-top: 1px solid var(--line); }
+.matrix-result-grid { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 9px; margin-bottom: 12px; }
+.matrix-result { padding: 10px; border: 1px solid var(--line); border-radius: 9px; background: #f8fafc; }
+.matrix-result span { display: block; color: var(--muted); font-size: 10px; text-transform: uppercase; }
+.matrix-result strong { display: block; margin-top: 3px; font-size: 18px; }
+.validation-list { margin: 8px 0 14px; padding-left: 20px; }
+.validation-list li { margin: 4px 0; }
+.validation-list.errors { color: var(--red); }
+.validation-list.warnings { color: #7a4c00; }
 
 .summary-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
 .metric { padding: 10px; border: 1px solid var(--line); border-radius: 9px; background: #f8fafc; }
@@ -153,6 +167,8 @@ button { cursor: pointer; }
 
 .auth-overlay { position: fixed; inset: 0; z-index: 1000; display: grid; place-items: center; padding: 20px; background: rgba(5,19,36,.72); backdrop-filter: blur(4px); }
 .auth-card { width: min(430px, 100%); padding: 24px; border-radius: 16px; background: #fff; box-shadow: 0 24px 70px rgba(0,0,0,.28); }
+.auth-card { position: relative; }
+.auth-close { position: absolute; top: 10px; right: 12px; width: 31px; height: 31px; display: grid; place-items: center; color: var(--muted); border: 0; border-radius: 50%; background: #f2f4f7; font-size: 21px; line-height: 1; }
 .auth-card h2 { margin: 7px 0; }
 .auth-card p { margin: 0 0 14px; color: var(--muted); }
 .session-badge { padding: 5px 8px; border: 1px solid rgba(255,255,255,.3); border-radius: 999px; color: #fff; background: rgba(255,255,255,.08); font-size: 10px; }
@@ -168,11 +184,14 @@ button { cursor: pointer; }
   .brand-copy { flex: 1; }
   .main-nav { order: 4; flex-basis: 100%; justify-content: flex-start; }
   .pilot-badge { display: none; }
+  .session-controls { margin-left: auto; }
+  .session-user { max-width: 120px; }
   .page-title, .section-heading { align-items: flex-start; flex-direction: column; }
   .module-grid, .flow-grid, .status-strip, .grid-2, .grid-3, .context-grid { grid-template-columns: 1fr; }
   .status-stat { border-right: 0; border-bottom: 1px solid var(--line); }
   .status-stat:last-child { border-bottom: 0; }
   .filter-bar { grid-template-columns: 1fr; }
+  .matrix-result-grid { grid-template-columns: repeat(2,1fr); }
 }
 
 @media print {

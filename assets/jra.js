@@ -1,9 +1,9 @@
 (function () {
   'use strict';
-  const catalog = window.KTMEX_CATALOG;
+  let catalog = window.KTMEX_CATALOG;
   const map = window.KTMEX_FO015_MAP;
-  const risks = Object.fromEntries(catalog.risks.filter(item => item.type === 'SEGURIDAD').map(item => [item.id,item]));
-  const activities = Object.fromEntries(catalog.activities.map(item => [item.id,item]));
+  let risks = Object.fromEntries(catalog.risks.filter(item => item.type === 'SEGURIDAD').map(item => [item.id,item]));
+  let activities = Object.fromEntries(catalog.activities.map(item => [item.id,item]));
   const state = { activity:null, tasks:[], chemicals:[], otherHazards:{}, approvals:{}, id:'', folio:'', status:'DRAFT', dirty:false };
   const approvalRoles = [
     ['MGR_AM','MGR / AM'], ['ENGINEERING','Engineering'], ['SAFETY','Safety'], ['ENVIRONMENTAL','Environmental']
@@ -15,7 +15,18 @@
     control:[[1,'Ninguna'],[.9,'Moderadamente efectiva / EPP'],[.5,'Efectiva / estandarización'],[.1,'Muy efectiva / ingeniería']]
   };
 
-  function init() {
+  async function init() {
+    if(KTMEX.config.apiUrl&&KTMEX.api.session){
+      try{
+        catalog=await KTMEX.catalog.load();
+        risks=Object.fromEntries(catalog.risks.filter(item=>item.type==='SEGURIDAD').map(item=>[item.id,item]));
+        activities=Object.fromEntries(catalog.activities.map(item=>[item.id,item]));
+      }catch(error){
+        KTMEX.toast('No se pudo cargar el catálogo vigente: '+error.message,true);
+        byId('activitySelect').disabled=true;
+        return;
+      }
+    }
     byId('evalDate').value = new Date().toISOString().slice(0,10);
     byId('workCategory').innerHTML = optionList([['','Seleccione…'],['Conveyance','Conveyance'],['Production','Producción'],['Maintenance','Mantenimiento'],['Other','Otros']]);
     catalog.activities.forEach(item => byId('activitySelect').append(new Option(item.name,item.id)));
