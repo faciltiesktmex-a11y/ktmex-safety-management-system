@@ -604,10 +604,10 @@
 
   <script>
     const CRITERIO = window.KTMEX_CRITERIA;
-    const CATALOGO = CRITERIO.adaptCatalog(window.KTMEX_CATALOG);
-    const RIESGOS = Object.fromEntries(CATALOGO.riesgos.map(r => [r.id, r]));
-    const ACTIVIDADES = Object.fromEntries(CATALOGO.actividades.map(a => [a.id, a]));
-    const PERMISOS = Object.fromEntries(CATALOGO.permisos.map(p => [p.id, p]));
+    let CATALOGO = CRITERIO.adaptCatalog(window.KTMEX_CATALOG);
+    let RIESGOS = Object.fromEntries(CATALOGO.riesgos.map(r => [r.id, r]));
+    let ACTIVIDADES = Object.fromEntries(CATALOGO.actividades.map(a => [a.id, a]));
+    let PERMISOS = Object.fromEntries(CATALOGO.permisos.map(p => [p.id, p]));
     const NUEVA_ACTIVIDAD = '__nueva_actividad__';
     let estado = { actividad: null, pasos: [], permisos: [], folio: '', id: '', dirty: false, aprobacionSafety: null };
 
@@ -623,7 +623,19 @@
         <p class="help">${esc(CRITERIO.version)} · ${esc(CRITERIO.status)}</p>`;
     }
 
-    function iniciar() {
+    async function iniciar() {
+      if (window.KTMEX?.config?.apiUrl && KTMEX.api.session) {
+        try {
+          CATALOGO = CRITERIO.adaptCatalog(await KTMEX.catalog.load());
+          RIESGOS = Object.fromEntries(CATALOGO.riesgos.map(r => [r.id, r]));
+          ACTIVIDADES = Object.fromEntries(CATALOGO.actividades.map(a => [a.id, a]));
+          PERMISOS = Object.fromEntries(CATALOGO.permisos.map(p => [p.id, p]));
+        } catch (error) {
+          aviso('No se pudo cargar el catálogo vigente: ' + error.message, true);
+          document.getElementById('actividad').disabled = true;
+          return;
+        }
+      }
       renderReglasCriterio();
       const select = document.getElementById('actividad');
       CATALOGO.actividades.forEach(a => {

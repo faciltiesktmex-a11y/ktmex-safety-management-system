@@ -16,6 +16,25 @@
       <div class="status-stat"><span>Dueño funcional</span><strong>Safety</strong></div><div class="status-stat"><span>Coautor</span><strong>Ambiental</strong></div><div class="status-stat"><span>Estado</span><strong>Piloto</strong></div><div class="status-stat"><span>Próxima acción</span><strong>Validar matriz</strong></div>
     </section>
 
+    <section class="card section" id="matrixImportSection">
+      <div class="card-header"><div><div class="eyebrow">Administración controlada</div><h2>Actualizar matriz desde Excel</h2></div><span class="chip gray" id="matrixImportStatus">Sin archivo</span></div>
+      <div class="card-body">
+        <div class="notice info" id="matrixAccessNotice"><strong>Acceso:</strong> inicie sesión para validar una matriz.</div>
+        <div class="grid grid-3">
+          <div class="field"><label class="required" for="matrixFile">Matriz completa</label><input id="matrixFile" type="file" accept=".xlsx,.xls,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel"><div class="help">Excel .xlsx o .xls; máximo 5 MB. La carga no sustituye la versión vigente.</div></div>
+          <div class="field"><label class="required" for="matrixVersion">Nueva versión</label><input id="matrixVersion" maxlength="50" placeholder="REVIEW-20261014-01"><div class="help">Debe ser única. Se creará con estado REVIEW.</div></div>
+          <div class="field"><label class="required" for="matrixDescription">Motivo del cambio</label><input id="matrixDescription" maxlength="250" placeholder="Actualización aprobada de peligros, riesgos y controles"></div>
+        </div>
+        <div class="toolbar" style="margin-top:14px">
+          <a class="btn btn-light" href="templates/KTMEX_Plantilla_Importacion_Matriz_Riesgos.xlsx" download>Descargar plantilla Excel</a>
+          <button class="btn btn-primary" id="validateMatrixBtn" type="button" disabled>1. Validar y mostrar vista previa</button>
+          <button class="btn btn-success" id="applyMatrixBtn" type="button" disabled>2. Crear versión REVIEW</button>
+        </div>
+        <div id="matrixPreview" class="matrix-preview hidden" aria-live="polite"></div>
+        <div id="matrixHistory" class="section hidden"></div>
+      </div>
+    </section>
+
     <section class="card section">
       <div class="card-header"><h2>Criterio único de evaluación</h2><span class="chip gray" id="criteriaVersion">—</span></div>
       <div class="card-body" id="criteriaTables"></div>
